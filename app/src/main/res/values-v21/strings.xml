@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appTitle">Futh</string>
+    <string name="idDevice">ID DEVICE:</string>
+    <string name="txvAddDevice">ADD DEVICES</string>
+</resources>

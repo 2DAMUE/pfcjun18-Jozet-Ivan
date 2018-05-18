@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "595747463361",
+    "firebase_url": "https://futh-dam.firebaseio.com",
+    "project_id": "futh-dam",
+    "storage_bucket": "futh-dam.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:595747463361:android:891502fef272dc0c",
+        "android_client_info": {
+          "package_name": "com.quadram.futh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "595747463361-lgr5miti55femadnc8n3ligfpjtsr91r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quadram.futh",
+            "certificate_hash": "16752b2105a47eada4a70934cebd6ea5621b9585"
+          }
+        },
+        {
+          "client_id": "595747463361-3agjj76qd6k1qc3f2cvem0cql4bln2c2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_AiZpA85M1Qe-4r7G74gk5EwXVgyHDL4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "595747463361-3agjj76qd6k1qc3f2cvem0cql4bln2c2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

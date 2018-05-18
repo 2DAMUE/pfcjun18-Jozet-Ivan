@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Futh</string>
+    <string name="not_firebase_auth">Error de autenticación con Firebase</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="not_close_session">No se ha podido cerrar sesión</string>
+    <string name="appTitle">Futh</string>
+    <string name="idDevice">ID DEVICE:</string>
+    <string name="txvAddDevice">ADD DEVICES</string>
+    <string name="btnAddDevice">ADD DEVICE</string>
 </resources>
