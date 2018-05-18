@@ -118,9 +118,31 @@ public class MainActivity extends AppCompatActivity
     private void addDevices() {
         AlertDialog.Builder aBuilder = new AlertDialog.Builder(MainActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.dialog_add_devices, null);
+
+        final EditText etIdDevice = mView.findViewById(R.id.etIdDevice);
+        Button btnAddDevice = mView.findViewById(R.id.btnAdd);
+
+        btnAddDevice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String idDevice = etIdDevice.getText().toString();
+
+                if(idDevice.equals("")){
+                    Toast.makeText(MainActivity.this, "Debes introducir un ID", Toast.LENGTH_SHORT).show();
+                }else{
+                    addDeviceFirebase(idDevice);
+                }
+            }
+        });
         aBuilder.setView(mView);
         AlertDialog dialog = aBuilder.create();
         dialog.show();
+
+    }
+
+    private void addDeviceFirebase(String idDevice) {
+
+
     }
 
 
