@@ -23,7 +23,7 @@
         android:id="@+id/btnGoogle"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@android:color/white"
+        android:background="@animator/rounded_button_login"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"

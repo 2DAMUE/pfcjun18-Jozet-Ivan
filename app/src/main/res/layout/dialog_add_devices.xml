@@ -10,18 +10,22 @@
         android:layout_height="wrap_content"
         android:textSize="25sp"
         android:textStyle="bold"
+        android:textColor="#FFFD7274"
         android:layout_marginTop="5dp"
         android:text="@string/txvAddDevice"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="80dp"
+        android:textColor="#FFFD7274"
         android:text="@string/idDevice"/>
 
     <EditText
         android:id="@+id/etIdDevice"
         android:layout_width="match_parent"
+        android:textColorLink="#FFFD7274"
+        android:textColorHighlight="#FFFD7274"
         android:layout_height="wrap_content" />
 
     <Button
@@ -30,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_marginTop="20dp"
         android:layout_height="wrap_content"
-        android:background="@animator/fondo_degradado"
+        android:background="@animator/rounded_button_degradado"
         android:textColor="@android:color/white"
         android:text="@string/btnAddDevice"/>
 
