@@ -1,8 +1,13 @@
 package com.quadram.futh;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -11,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +39,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.quadram.futh.service.ServiceListener;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
@@ -44,12 +51,23 @@ public class MainActivity extends AppCompatActivity
 
     private GoogleApiClient googleApiClient;
 
+    private ServiceListener mService;
+    private boolean mBound;
+
     ImageView imgGoogle;
     TextView txvNameGoogle, txvGmail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (!isServiceRunning(ServiceListener.class)) {
+            Intent i = new Intent(this, ServiceListener.class);
+            startService(i);
+        }
+
+        mBound = false;
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -150,6 +168,9 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         firebaseAuth.addAuthStateListener(firebaseAuthListener);
+        // Bind to LocalService
+        Intent i = new Intent(this, ServiceListener.class);
+        bindService(i, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -224,6 +245,12 @@ public class MainActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
 
+        // Unbind from the service
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
+
         if(firebaseAuthListener != null){
             firebaseAuth.removeAuthStateListener(firebaseAuthListener);
         }
@@ -232,5 +259,30 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            ServiceListener.LocalBinder binder = (ServiceListener.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+            Log.d("SERVICE_LISTENER", "CONNECTED");
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName cn) {
+            mBound = false;
+        }
+    };
+
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
