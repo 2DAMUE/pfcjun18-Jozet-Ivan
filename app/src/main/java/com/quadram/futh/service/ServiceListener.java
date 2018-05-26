@@ -19,6 +19,7 @@ import com.quadram.futh.model.Gas;
 import com.quadram.futh.model.Humidity;
 import com.quadram.futh.model.Relay;
 import com.quadram.futh.model.Temperature;
+import com.quadram.futh.notification.NotificationHelper;
 
 // TODO: Implementar notificaciones
 public class ServiceListener extends Service {
@@ -33,7 +34,7 @@ public class ServiceListener extends Service {
     private static Device dispositivoNew;
     private static boolean isFirstRead;
     private static Trace trace;
-    //private static NotificationHelper NH;
+    private static NotificationHelper nh;
 
     public ServiceListener() {
         mBinder = new LocalBinder();
@@ -148,7 +149,7 @@ public class ServiceListener extends Service {
         }
         else if (changes.equalsIgnoreCase("temperature")) {
             if (dispositivoNew.getTemperature().getValue() > 40.0) {
-                //NH.showNotification("Temperatura", "¿Me explicas cómo cojones hace "+dispositivoNew.getTemperatura().getValue()+" grados en tu casa?", android.R.drawable.stat_notify_chat);
+                nh.showNotification("Temperatura", "¿Me explicas cómo cojones hace "+dispositivoNew.getTemperature().getValue()+" grados en tu casa?", android.R.drawable.stat_notify_chat);
             }
             dispositivoOld.getTemperature().setValue(dispositivoNew.getTemperature().getValue());  // Se guarda el nuevo valor en el objeto antiguo para ser comaparado de nuevo
         }
@@ -171,7 +172,7 @@ public class ServiceListener extends Service {
         super.onCreate();
         INSTANCE = getInstance();  // Se inicializa el singleton del servicio cuando se completa el boot del sistema
         trace = new Trace();
-        //NH = new NotificationHelper(getApplicationContext());
+        nh = new NotificationHelper(getApplicationContext());
 
         // Configure Firebase modules
         mAuth = FirebaseAuth.getInstance();

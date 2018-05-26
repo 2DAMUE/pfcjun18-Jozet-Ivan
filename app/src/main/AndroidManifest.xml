@@ -13,6 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_rounded"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+        <meta-data
+            android:name="com.google.android.gms.car.application"
+            android:resource="@xml/automotive_app_desc" />
+
         <activity
             android:name=".LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -43,6 +48,23 @@
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver
+            android:name=".notification.MessageReadReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="es.shareit.futhservice.MY_ACTION_MESSAGE_READ" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".notification.MessageReplyReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="es.shareit.futhservice.MY_ACTION_MESSAGE_REPLY" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".notification.NotificationService" />
     </application>
 
 </manifest>
