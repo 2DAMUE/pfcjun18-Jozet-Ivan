@@ -4,10 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.quadram.futh.helper.Constantes;
@@ -33,14 +31,14 @@ public class MessageReplyReceiver extends BroadcastReceiver {
 
             Toast.makeText(context, "Reply: " + message, Toast.LENGTH_LONG).show();
 
-            NotificationManagerCompat.from(context).cancel(Constantes.CONVERSATION_ID_INT);  // Se cancela la notificacion una vez ha sido respondida
+            NotificationManagerCompat.from(context).cancel(Constantes.NOTIFICATION_ID_INT);  // Se cancela la notificacion una vez ha sido respondida
         }
     }
 
     private CharSequence getMessageText(Intent intent) {
         Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
         if (remoteInput != null) {
-            return remoteInput.getCharSequence(Constantes.EXTRA_VOICE_REPLY);
+            return remoteInput.getCharSequence(Constantes.VOICE_REPLY);
         }
         return "";
     }

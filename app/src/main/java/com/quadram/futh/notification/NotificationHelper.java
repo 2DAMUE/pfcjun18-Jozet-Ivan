@@ -16,7 +16,7 @@ public class NotificationHelper extends ContextWrapper {
     }
 
     public void showNotification(String title, String text, int icon, boolean hasReply) {
-        notification.setAction(Constantes.SEND_MESSAGE_ACTION);
+        notification.setAction(Constantes.SHOW_NOTIFICATION);
         notification.putExtra("title", title);
         notification.putExtra("text", text);
         notification.putExtra("icon", icon);

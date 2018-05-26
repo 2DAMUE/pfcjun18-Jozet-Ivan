@@ -24,10 +24,10 @@ public class NotificationService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         // Handle intent to send a new notification.
-        if (intent != null && Constantes.SEND_MESSAGE_ACTION.equals(intent.getAction())) {
+        if (intent != null && Constantes.SHOW_NOTIFICATION.equals(intent.getAction())) {
 
             sendNotification(
-                    Constantes.CONVERSATION_ID_INT,
+                    Constantes.NOTIFICATION_ID_INT,
                     intent.getStringExtra("title"),
                     intent.getStringExtra("text"),
                     intent.getIntExtra("icon", android.R.drawable.sym_def_app_icon),
@@ -38,12 +38,12 @@ public class NotificationService extends IntentService {
 
     // Creates an intent that will be triggered when a message is read.
     private Intent getMessageReadIntent(int id) {
-        return new Intent().setAction(Constantes.READ_ACTION).putExtra(Constantes.CONVERSATION_ID_STRING, id);
+        return new Intent().setAction(Constantes.READ_ACTION).putExtra(Constantes.NOTIFICATION_ID_STRING, id);
     }
 
     // Creates an Intent that will be triggered when a voice reply is received.
     private Intent getMessageReplyIntent(int conversationId) {
-        return new Intent().setAction(Constantes.REPLY_ACTION).putExtra(Constantes.CONVERSATION_ID_STRING, conversationId);
+        return new Intent().setAction(Constantes.REPLY_ACTION).putExtra(Constantes.NOTIFICATION_ID_STRING, conversationId);
     }
 
     private void sendNotification(
@@ -72,7 +72,7 @@ public class NotificationService extends IntentService {
 
         /// TODO: Add the code to create the UnreadConversation.
         // Build a RemoteInput for receiving voice input from devices.
-        RemoteInput remoteInput = new RemoteInput.Builder(Constantes.EXTRA_VOICE_REPLY).build();
+        RemoteInput remoteInput = new RemoteInput.Builder(Constantes.VOICE_REPLY).build();
 
         // Create the UnreadConversation and populate it with the participant name,
         // read and reply intents.
@@ -151,11 +151,11 @@ public class NotificationService extends IntentService {
             // start a
             // (i)  broadcast receiver which runs on the UI thread or
             // (ii) service for a background task to b executed , but for the purpose of this codelab, will be doing a broadcast receiver
-            intent = MessageReplyReceiver.getReplyMessageIntent(this, Constantes.CONVERSATION_ID_INT, 1);
+            intent = MessageReplyReceiver.getReplyMessageIntent(this, Constantes.NOTIFICATION_ID_INT, 1);
             return PendingIntent.getBroadcast(getApplicationContext(), 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         } else {
             // start your activity
-            intent = MessageReplyReceiver.getReplyMessageIntent(this, Constantes.CONVERSATION_ID_INT, 1);
+            intent = MessageReplyReceiver.getReplyMessageIntent(this, Constantes.NOTIFICATION_ID_INT, 1);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             return PendingIntent.getActivity(this, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
