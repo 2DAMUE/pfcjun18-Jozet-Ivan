@@ -9,7 +9,8 @@ public class ServiceStartup extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("SERVICE_STARTUP", "ONBOOTCOMPLETED");
+        Log.d("ServiceStartup", "ONBOOTCOMPLETED");
+        
         Intent startServiceIntent = new Intent(context, ServiceListener.class);
         context.startService(startServiceIntent);
     }

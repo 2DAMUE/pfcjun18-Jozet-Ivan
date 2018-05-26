@@ -4,7 +4,10 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,7 +25,10 @@ public class ServiceListener extends Service {
     private final IBinder mBinder;
     private static ServiceListener INSTANCE = null;
     private static FirebaseDatabase database;
+    private static FirebaseAuth mAuth;
+    private static FirebaseUser currentUser;
     private static DatabaseReference myRef;
+    private static ValueEventListener listener;
     private static Device dispositivoOld;
     private static Device dispositivoNew;
     private static boolean isFirstRead;
@@ -40,8 +46,7 @@ public class ServiceListener extends Service {
     public static ServiceListener getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new ServiceListener();
-            myRef = database.getReference("devices/0x00000001");
-            myRef.addValueEventListener(new ValueEventListener() {
+            listener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (isFirstRead) {
@@ -68,7 +73,8 @@ public class ServiceListener extends Service {
 
                 @Override
                 public void onCancelled(DatabaseError error) {}
-            });
+            };
+            myRef = database.getReference("devices/0x00000001");
         }
         return INSTANCE;
     }
@@ -166,10 +172,31 @@ public class ServiceListener extends Service {
         INSTANCE = getInstance();  // Se inicializa el singleton del servicio cuando se completa el boot del sistema
         trace = new Trace();
         //NH = new NotificationHelper(getApplicationContext());
+
+        // Configure Firebase modules
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();  // Se obtiene el usuario actual
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        // Si no hay algun usuario con la sesion iniciada se limpia la sesion y se detiene el servicio
+        if (currentUser == null) {
+            mAuth.signOut();
+            stopSelf();
+            Log.d("ServiceStartup", "NOSESSION");
+        }
+        else {
+            myRef.addValueEventListener(listener);  // Se añade el listener de Firebase
+        }
+
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("ServiceListener", "ONDESTROY");
+        myRef.removeEventListener(listener);  // Se elimina el listener de Firebase cuando se detiene el servicio
     }
 }

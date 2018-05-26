@@ -28,13 +28,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
@@ -223,7 +219,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_logout) {
             firebaseAuth.signOut();
-
+            stopService(new Intent(getApplicationContext(), ServiceListener.class));  // Se detiene el listener de Firebase a la vez que se cierra sesion
             Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
                 @Override
                 public void onResult(@NonNull Status status) {
@@ -267,7 +263,7 @@ public class MainActivity extends AppCompatActivity
             ServiceListener.LocalBinder binder = (ServiceListener.LocalBinder) service;
             mService = binder.getService();
             mBound = true;
-            Log.d("SERVICE_LISTENER", "CONNECTED");
+            Log.d("MainActivity", "CONNECTED");
         }
 
         @Override
