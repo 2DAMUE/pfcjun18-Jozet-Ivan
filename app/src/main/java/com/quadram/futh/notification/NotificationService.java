@@ -1,10 +1,12 @@
 package com.quadram.futh.notification;
 
 import android.app.IntentService;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
@@ -50,6 +52,8 @@ public class NotificationService extends IntentService {
             int icon,
             long timestamp) {
 
+        createNotificationChannel();
+
         // A pending Intent for reads.
         PendingIntent readPendingIntent = PendingIntent.getBroadcast(
                 getApplicationContext(),
@@ -91,35 +95,63 @@ public class NotificationService extends IntentService {
                         .setHintLaunchesActivity(false);
         /// End inline action for Wear 2.0.
 
-        // Add an action to allow replies.
-        NotificationCompat.Action replyAction =
-                new NotificationCompat.Action.Builder(
-                        android.R.drawable.stat_notify_chat,
-                        "Reply",
-                        replyIntent)
-                        /// TODO: Add better wear support.
-                        .addRemoteInput(remoteInput)
-                        .extend(inlineActionForWear2)
-                        .build();
+        // 2. Build action
+        NotificationCompat.Action replyAction = new NotificationCompat.Action.Builder(
+                android.R.drawable.sym_action_chat, "Reply", getReplyPendingIntent())
+                .addRemoteInput(remoteInput)
+                .extend(inlineActionForWear2) // TODO: Add better Wear support.
+                .setAllowGeneratedReplies(true)
+                .build();
 
-
+        // Creamos la notificacion
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(getApplicationContext(), "CHANNEL")
                         .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
                         .setSmallIcon(android.R.drawable.sym_def_app_icon)
                         .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), icon))
                         .setWhen(timestamp)
-                        .setColor(Color.YELLOW)
-                        .addAction(replyAction)
                         .setContentTitle(sender)
                         .setContentIntent(readPendingIntent)
                         /// TODO: Extend the notification with CarExtender.
                         .extend(new NotificationCompat.CarExtender()
                                 .setUnreadConversation(unreadConversationBuilder.build()));
         builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) builder.addAction(replyAction);
         /// End
 
         Log.d(TAG, "Sending notification " + conversationId + " conversation: " + message);
         NotificationManagerCompat.from(this).notify(conversationId, builder.build());
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "name";
+            String description = "description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("CHANNEL", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private PendingIntent getReplyPendingIntent() {
+        Intent intent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            // start a
+            // (i)  broadcast receiver which runs on the UI thread or
+            // (ii) service for a background task to b executed , but for the purpose of this codelab, will be doing a broadcast receiver
+            intent = MessageReplyReceiver.getReplyMessageIntent(this, Constantes.CONVERSATION_ID_INT, 1);
+            return PendingIntent.getBroadcast(getApplicationContext(), 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        } else {
+            // start your activity
+            intent = MessageReplyReceiver.getReplyMessageIntent(this, Constantes.CONVERSATION_ID_INT, 1);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            return PendingIntent.getActivity(this, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
     }
 }

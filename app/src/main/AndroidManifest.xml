@@ -64,7 +64,9 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".notification.NotificationService" />
+        <service
+            android:name=".notification.NotificationService"
+            android:enabled="true"/>
     </application>
 
 </manifest>
