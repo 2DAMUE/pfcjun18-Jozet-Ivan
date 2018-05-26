@@ -13,7 +13,6 @@ public class MessageReadReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
         Log.d(TAG, "ONRECEIVE");
         int conversationId = intent.getIntExtra(Constantes.CONVERSATION_ID_STRING, -1);
         if (conversationId != -1) {

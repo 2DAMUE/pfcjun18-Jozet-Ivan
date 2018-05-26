@@ -7,5 +7,4 @@ public class Constantes {
     public static final String CONVERSATION_ID_STRING = "conversation_id";
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
     public static final int CONVERSATION_ID_INT = 100;
-    public static final int UPDATE_REPLY_ACTION = 200;
 }

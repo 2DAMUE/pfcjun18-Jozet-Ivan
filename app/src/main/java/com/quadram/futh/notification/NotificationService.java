@@ -31,6 +31,7 @@ public class NotificationService extends IntentService {
                     intent.getStringExtra("title"),
                     intent.getStringExtra("text"),
                     intent.getIntExtra("icon", android.R.drawable.sym_def_app_icon),
+                    intent.getBooleanExtra("hasReply", false),
                     System.currentTimeMillis());
         }
     }
@@ -50,6 +51,7 @@ public class NotificationService extends IntentService {
             String sender,
             String message,
             int icon,
+            boolean hasReply,
             long timestamp) {
 
         createNotificationChannel();
@@ -110,13 +112,17 @@ public class NotificationService extends IntentService {
                         .setSmallIcon(android.R.drawable.sym_def_app_icon)
                         .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), icon))
                         .setWhen(timestamp)
+                        .setAutoCancel(true)
                         .setContentTitle(sender)
                         .setContentIntent(readPendingIntent)
                         /// TODO: Extend the notification with CarExtender.
                         .extend(new NotificationCompat.CarExtender()
                                 .setUnreadConversation(unreadConversationBuilder.build()));
         builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) builder.addAction(replyAction);
+
+        if (hasReply) {  // Si se ha indicado que la notificacion debe tener respuesta se le añade
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) builder.addAction(replyAction);  // Aunque se quiera respuesta, solo se permite para versiones superiores a Android N
+        }
         /// End
 
         Log.d(TAG, "Sending notification " + conversationId + " conversation: " + message);

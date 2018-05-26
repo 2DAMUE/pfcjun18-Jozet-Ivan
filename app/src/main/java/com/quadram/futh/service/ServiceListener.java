@@ -149,7 +149,7 @@ public class ServiceListener extends Service {
         }
         else if (changes.equalsIgnoreCase("temperature")) {
             if (dispositivoNew.getTemperature().getValue() > 40.0) {
-                nh.showNotification("Temperatura", "¿Me explicas cómo cojones hace "+dispositivoNew.getTemperature().getValue()+" grados en tu casa?", android.R.drawable.stat_notify_chat);
+                nh.showNotification("Temperatura", "¿Me explicas cómo cojones hace "+dispositivoNew.getTemperature().getValue()+" grados en tu casa?", android.R.drawable.stat_notify_chat, true);
             }
             dispositivoOld.getTemperature().setValue(dispositivoNew.getTemperature().getValue());  // Se guarda el nuevo valor en el objeto antiguo para ser comaparado de nuevo
         }

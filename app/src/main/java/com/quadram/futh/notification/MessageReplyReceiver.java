@@ -32,6 +32,8 @@ public class MessageReplyReceiver extends BroadcastReceiver {
             CharSequence message = getMessageText(intent);
 
             Toast.makeText(context, "Reply: " + message, Toast.LENGTH_LONG).show();
+
+            NotificationManagerCompat.from(context).cancel(Constantes.CONVERSATION_ID_INT);  // Se cancela la notificacion una vez ha sido respondida
         }
     }
 

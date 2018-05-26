@@ -15,11 +15,12 @@ public class NotificationHelper extends ContextWrapper {
         notification = new Intent(getApplicationContext(), NotificationService.class);
     }
 
-    public void showNotification(String title, String text, int icon) {
+    public void showNotification(String title, String text, int icon, boolean hasReply) {
         notification.setAction(Constantes.SEND_MESSAGE_ACTION);
         notification.putExtra("title", title);
         notification.putExtra("text", text);
         notification.putExtra("icon", icon);
+        notification.putExtra("hasReply", hasReply);
         startService(notification);
     }
 }
