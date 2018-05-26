@@ -53,14 +53,14 @@
             android:name=".notification.MessageReadReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="es.shareit.futhservice.MY_ACTION_MESSAGE_READ" />
+                <action android:name="com.quadram.futh.ACTION_MESSAGE_READ" />
             </intent-filter>
         </receiver>
         <receiver
             android:name=".notification.MessageReplyReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="es.shareit.futhservice.MY_ACTION_MESSAGE_REPLY" />
+                <action android:name="com.quadram.futh.ACTION_MESSAGE_REPLY" />
             </intent-filter>
         </receiver>
 
