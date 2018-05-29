@@ -35,6 +35,8 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.quadram.futh.service.ServiceListener;
 
 public class MainActivity extends AppCompatActivity
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
 
     private FloatingActionButton fabAddDevices;
+
+    private NavigationView navigationView;
 
     private GoogleApiClient googleApiClient;
 
@@ -82,7 +86,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         View hView = navigationView.getHeaderView(0);
@@ -136,6 +140,10 @@ public class MainActivity extends AppCompatActivity
         final EditText etIdDevice = mView.findViewById(R.id.etIdDevice);
         Button btnAddDevice = mView.findViewById(R.id.btnAdd);
 
+        aBuilder.setView(mView);
+        final AlertDialog dialog = aBuilder.create();
+        dialog.show();
+
         btnAddDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,19 +152,20 @@ public class MainActivity extends AppCompatActivity
                 if(idDevice.equals("")){
                     Toast.makeText(MainActivity.this, "Debes introducir un ID", Toast.LENGTH_SHORT).show();
                 }else{
-                    addDeviceFirebase(idDevice);
+                    addDeviceFirebase(idDevice, dialog);
                 }
             }
         });
-        aBuilder.setView(mView);
-        AlertDialog dialog = aBuilder.create();
-        dialog.show();
 
     }
 
-    private void addDeviceFirebase(String idDevice) {
-
-
+    private void addDeviceFirebase(String idDevice, AlertDialog dialog) {
+        Menu menu = navigationView.getMenu();
+        menu.add(idDevice).setIcon(R.drawable.ic_arduino);
+        DatabaseReference refRaiz = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference refUsers = refRaiz.child("users").child(firebaseAuth.getCurrentUser().getUid());
+        refUsers.child("devices").child(idDevice).setValue(idDevice);
+        dialog.dismiss();
     }
 
 
@@ -207,17 +216,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_logout) {
+        if (id == R.id.nav_logout) {
             firebaseAuth.signOut();
             stopService(new Intent(getApplicationContext(), ServiceListener.class));  // Se detiene el listener de Firebase a la vez que se cierra sesion
             Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
