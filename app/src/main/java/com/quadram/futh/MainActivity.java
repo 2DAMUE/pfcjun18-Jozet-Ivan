@@ -35,15 +35,25 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.quadram.futh.model.UserDevice;
 import com.quadram.futh.service.ServiceListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
+    private FirebaseUser currentUser;
 
     private FloatingActionButton fabAddDevices;
 
@@ -53,6 +63,7 @@ public class MainActivity extends AppCompatActivity
 
     private ServiceListener mService;
     private boolean mBound;
+    private Map<String, String> devicesMap;
 
     ImageView imgGoogle;
     TextView txvNameGoogle, txvGmail;
@@ -105,6 +116,7 @@ public class MainActivity extends AppCompatActivity
                 .build();
 
         firebaseAuth = FirebaseAuth.getInstance();
+        currentUser = firebaseAuth.getCurrentUser();
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -116,6 +128,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         };
+        checkDevices(); // Se comprueba el estado del usuario en Real-Time Database
     }
 
     private void goLoginActivity() {
@@ -156,7 +169,6 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
-
     }
 
     private void addDeviceFirebase(String idDevice, AlertDialog dialog) {
@@ -279,5 +291,42 @@ public class MainActivity extends AppCompatActivity
             }
         }
         return false;
+    }
+
+    private void checkDevices() {
+        // Se comprueba si es la primera vez que inicia sesion y se le asigna un perfil en Real-Time Database
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        ValueEventListener vel = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.getValue() != null) {
+                    devicesMap = (HashMap<String,String>) snapshot.getValue();  // Se obtienen los dispositivos en formato clave:valor
+                    ArrayList<String> devices = new ArrayList<>(devicesMap.values());  // Se meten los valores en un ArrayList
+
+                    for (int i = 0; i < devices.size(); i++) {
+                        Menu menu = navigationView.getMenu();
+                        menu.add(devices.get(i)).setIcon(R.drawable.ic_arduino);
+                        Log.d("DEVICE", devices.get(i));
+                    }
+                }
+                reference.removeEventListener(this);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("USER", databaseError.getMessage());
+                reference.removeEventListener(this);
+            }
+        };
+        reference.child("users").child(currentUser.getUid()).child("devices").addListenerForSingleValueEvent(vel);
+    }
+
+    // Funcion para obtener la clave a partir de un valor en un Map
+    public Object getKeyFromValue(Map hm, Object value) {
+        for (Object o : hm.keySet()) {
+            if (hm.get(o).equals(value)) {
+                return o;
+            }
+        }
+        return null;
     }
 }
