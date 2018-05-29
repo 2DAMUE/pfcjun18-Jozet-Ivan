@@ -147,6 +147,8 @@ public class MainActivity extends AppCompatActivity
 
 
     private void addDevices() {
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
         AlertDialog.Builder aBuilder = new AlertDialog.Builder(MainActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.dialog_add_devices, null);
 
@@ -160,13 +162,27 @@ public class MainActivity extends AppCompatActivity
         btnAddDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String idDevice = etIdDevice.getText().toString();
+                final String idDevice = etIdDevice.getText().toString().trim();  // Se obtiene el ID introducido
 
-                if(idDevice.equals("")){
-                    Toast.makeText(MainActivity.this, "Debes introducir un ID", Toast.LENGTH_SHORT).show();
-                }else{
-                    addDeviceFirebase(idDevice, dialog);
-                }
+                reference.child("users").child(currentUser.getUid()).child("devices").child(idDevice).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        if (snapshot.getValue() != null) {  // Si en Firebase ya existe no le dejamos al usuario añadirlo de nuevo
+                            Toast.makeText(getApplicationContext(), "El ID introducido ya ha sido añadido", Toast.LENGTH_SHORT).show();
+                        }
+                        else if(idDevice.equals("")){  // Si no se introdujo nada se le muestra al usuario un Toast indicandolo
+                            Toast.makeText(getApplicationContext(), "Debes introducir un ID", Toast.LENGTH_SHORT).show();
+                        }
+                        else {  // Sincronizamos el dispositivo con el usuario
+                            addDeviceFirebase(idDevice, dialog);
+                        }
+                        reference.removeEventListener(this);  // Se elimina el listener para liberar memoria
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        reference.removeEventListener(this);  // Se elimina el listener para liberar memoria
+                    }
+                });
             }
         });
     }
@@ -318,6 +334,12 @@ public class MainActivity extends AppCompatActivity
             }
         };
         reference.child("users").child(currentUser.getUid()).child("devices").addListenerForSingleValueEvent(vel);
+    }
+
+    private void checkIfDeviceExists(String idDevice) {
+        // Se comprueba si es la primera vez que inicia sesion y se le asigna un perfil en Real-Time Database
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
     }
 
     // Funcion para obtener la clave a partir de un valor en un Map
