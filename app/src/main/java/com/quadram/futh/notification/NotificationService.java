@@ -6,12 +6,14 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
 import android.util.Log;
 
+import com.quadram.futh.R;
 import com.quadram.futh.helper.Constantes;
 
 public class NotificationService extends IntentService {
@@ -30,6 +32,7 @@ public class NotificationService extends IntentService {
                     Constantes.NOTIFICATION_ID_INT,
                     intent.getStringExtra("title"),
                     intent.getStringExtra("text"),
+                    intent.getStringExtra("channel"),
                     intent.getIntExtra("icon", android.R.drawable.sym_def_app_icon),
                     intent.getBooleanExtra("hasReply", false),
                     System.currentTimeMillis());
@@ -50,6 +53,7 @@ public class NotificationService extends IntentService {
             int conversationId,
             String sender,
             String message,
+            String channel,
             int icon,
             boolean hasReply,
             long timestamp) {
@@ -107,9 +111,9 @@ public class NotificationService extends IntentService {
 
         // Creamos la notificacion
         NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(getApplicationContext(), "CHANNEL")
+                new NotificationCompat.Builder(getApplicationContext(), channel)  // Obtenemos el contexto y le asignamos a que grupo de notificaciones pertenece
                         .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
-                        .setSmallIcon(android.R.drawable.sym_def_app_icon)
+                        .setSmallIcon(R.mipmap.notification_small_icon)
                         .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), icon))
                         .setWhen(timestamp)
                         .setAutoCancel(true)
@@ -130,18 +134,28 @@ public class NotificationService extends IntentService {
     }
 
     private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "name";
-            String description = "description";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel("CHANNEL", name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
+            NotificationChannel channelGas = new NotificationChannel(Constantes.CHANNEL_GAS, Constantes.CHANNEL_GAS, NotificationManager.IMPORTANCE_HIGH);
+            channelGas.setDescription("Recibir notificaciones de los sensores de gas");
+
+            NotificationChannel channelHumidity = new NotificationChannel(Constantes.CHANNEL_HUMIDITY, Constantes.CHANNEL_HUMIDITY, NotificationManager.IMPORTANCE_HIGH);
+            channelHumidity.setDescription("Recibir notificaciones de los sensores de humedad");
+
+            NotificationChannel channelLight = new NotificationChannel(Constantes.CHANNEL_LIGHT, Constantes.CHANNEL_LIGHT, NotificationManager.IMPORTANCE_HIGH);
+            channelLight.setDescription("Recibir notificaciones si se enciende o se apaga la luz");
+
+            NotificationChannel channelPlug = new NotificationChannel(Constantes.CHANNEL_PLUG, Constantes.CHANNEL_PLUG, NotificationManager.IMPORTANCE_HIGH);
+            channelPlug.setDescription("Recibir notificaciones si se enciende o se apaga el enchufe");
+
+            NotificationChannel channelTemperature = new NotificationChannel(Constantes.CHANNEL_TEMPERATURE, Constantes.CHANNEL_TEMPERATURE, NotificationManager.IMPORTANCE_HIGH);
+            channelTemperature.setDescription("Recibir notificaciones de los sensores de temperatura");
+
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
+            notificationManager.createNotificationChannel(channelGas);
+            notificationManager.createNotificationChannel(channelHumidity);
+            notificationManager.createNotificationChannel(channelLight);
+            notificationManager.createNotificationChannel(channelPlug);
+            notificationManager.createNotificationChannel(channelTemperature);
         }
     }
 

@@ -7,4 +7,9 @@ public class Constantes {
     public static final String NOTIFICATION_ID_STRING = "notification_id";
     public static final String VOICE_REPLY = "voice_reply";
     public static final int NOTIFICATION_ID_INT = 100;
+    public static final String CHANNEL_GAS = "Gas";
+    public static final String CHANNEL_HUMIDITY = "Humidity";
+    public static final String CHANNEL_LIGHT = "Light";
+    public static final String CHANNEL_PLUG = "Plug";
+    public static final String CHANNEL_TEMPERATURE = "Temperature";
 }

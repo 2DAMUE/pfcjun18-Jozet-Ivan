@@ -13,6 +13,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.quadram.futh.R;
+import com.quadram.futh.helper.Constantes;
 import com.quadram.futh.helper.Trace;
 import com.quadram.futh.model.Device;
 import com.quadram.futh.model.Gas;
@@ -104,52 +106,65 @@ public class ServiceListener extends Service {
     private static void processChanges(String changes) {
         if (changes.equalsIgnoreCase("gas")) {
             if (dispositivoNew.getGas().getRisk() == 0) {
-
+                nh.showNotification("Gas", "No se han detectado gases nocivos para la salud", Constantes.CHANNEL_GAS, R.mipmap.gas_risk_zero_icon, false);
             }
             else if (dispositivoNew.getGas().getRisk() == 1) {
-
+                nh.showNotification("Gas", "¡Es posible que tengas una fuga de gas!", Constantes.CHANNEL_GAS, R.mipmap.gas_risk_one_icon, false);
             }
             else if (dispositivoNew.getGas().getRisk() == 2) {
-
+                nh.showNotification("Gas", "Toma medidas de precaución, ¡se han detectado niveles altísimos de gas!", Constantes.CHANNEL_GAS, R.mipmap.gas_risk_two_icon, false);
             }
             dispositivoOld.getGas().setRisk(dispositivoNew.getGas().getRisk());  // Se guarda el nuevo valor en el objeto antiguo para ser comaparado de nuevo
         }
         else if (changes.equalsIgnoreCase("humidity")) {
             if (dispositivoNew.getHumidity().getValue() <= 25) {
-
+                nh.showNotification("Humedad", "¿También has notado lo seco que está el ambiente?", Constantes.CHANNEL_LIGHT, R.mipmap.humidity_notification_icon, false);
             }
             else if (dispositivoNew.getHumidity().getValue() <= 50) {
-
+                nh.showNotification("Humedad", "¡Hace la humedad perfecta para jugar a la play!", Constantes.CHANNEL_LIGHT, R.mipmap.humidity_notification_icon, false);
             }
             else if (dispositivoNew.getHumidity().getValue() <= 75) {
-
+                nh.showNotification("Humedad", "Noto que estoy empezando a sudar y soy un móvil...", Constantes.CHANNEL_LIGHT, R.mipmap.humidity_notification_icon, false);
             }
             else if (dispositivoNew.getHumidity().getValue() <= 100) {
-
+                nh.showNotification("Humedad", "¡Esto es peor que el Amazonas!", Constantes.CHANNEL_LIGHT, R.mipmap.humidity_notification_icon, false);
             }
             dispositivoOld.getHumidity().setValue(dispositivoNew.getHumidity().getValue());  // Se guarda el nuevo valor en el objeto antiguo para ser comaparado de nuevo
         }
         else if (changes.equalsIgnoreCase("light")) {
             if (dispositivoNew.getLight().getState().equalsIgnoreCase("on")) {
-
+                nh.showNotification("Luz", "¡Alguien encendió la luz!", Constantes.CHANNEL_LIGHT, R.mipmap.light_on_notification_icon, false);
             }
             else if (dispositivoNew.getLight().getState().equalsIgnoreCase("off")) {
-
+                nh.showNotification("Luz", "¡Alguien apagó la luz!", Constantes.CHANNEL_LIGHT, R.mipmap.light_off_notification_icon, false);
             }
             dispositivoOld.getLight().setState(dispositivoNew.getLight().getState());  // Se guarda el nuevo valor en el objeto antiguo para ser comaparado de nuevo
         }
         else if (changes.equalsIgnoreCase("plug")) {
             if (dispositivoNew.getPlug().getState().equalsIgnoreCase("on")) {
-
+                nh.showNotification("Enchufe", "¡Alguien activó el enchufe!", Constantes.CHANNEL_PLUG, R.mipmap.connected_icon, false);
             }
             else if (dispositivoNew.getPlug().getState().equalsIgnoreCase("off")) {
-
+                nh.showNotification("Enchufe", "¡Alguien desactivó el enchufe!", Constantes.CHANNEL_PLUG, R.mipmap.disconnected_icon, false);
             }
             dispositivoOld.getPlug().setState(dispositivoNew.getPlug().getState());  // Se guarda el nuevo valor en el objeto antiguo para ser comaparado de nuevo
         }
         else if (changes.equalsIgnoreCase("temperature")) {
-            if (dispositivoNew.getTemperature().getValue() > 40.0) {
-                nh.showNotification("Temperatura", "¿Me explicas cómo cojones hace "+dispositivoNew.getTemperature().getValue()+" grados en tu casa?", android.R.drawable.stat_notify_chat, true);
+            float tempNew = dispositivoNew.getTemperature().getValue();
+            if (tempNew > 40.0) {
+                nh.showNotification("Temperatura", "¿Es posible que tu casa esté ardiendo?", Constantes.CHANNEL_TEMPERATURE, R.mipmap.temperature_fire_icon, false);
+            }
+            else if (tempNew > 25.0) {
+                nh.showNotification("Temperatura", "¡Con este calor no olvides hidratarte!", Constantes.CHANNEL_TEMPERATURE, R.mipmap.temperature_hot_icon, false);
+            }
+            else if (tempNew > 15.0) {
+                nh.showNotification("Temperatura", "¡Hace una temperatura que da gusto!", Constantes.CHANNEL_TEMPERATURE, R.mipmap.temperature_ideal_icon, false);
+            }
+            else if (tempNew >= 5.0) {
+                nh.showNotification("Temperatura", "Creo que deberías abrigarte...", Constantes.CHANNEL_TEMPERATURE, R.mipmap.temperature_cold_icon, false);
+            }
+            else if (tempNew < 5.0) {
+                nh.showNotification("Temperatura", "Me da la sensación de estar en la Antártida...", Constantes.CHANNEL_TEMPERATURE, R.mipmap.temperature_ice_icon, false);
             }
             dispositivoOld.getTemperature().setValue(dispositivoNew.getTemperature().getValue());  // Se guarda el nuevo valor en el objeto antiguo para ser comaparado de nuevo
         }
