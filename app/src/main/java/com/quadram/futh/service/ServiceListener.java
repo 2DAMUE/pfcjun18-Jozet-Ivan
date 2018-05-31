@@ -118,34 +118,34 @@ public class ServiceListener extends Service {
         }
         else if (changes.equalsIgnoreCase("humidity")) {
             if (dispositivoNew.getHumidity().getValue() <= 25) {
-                nh.showNotification("Humedad", "¿También has notado lo seco que está el ambiente?", Constantes.CHANNEL_LIGHT, R.mipmap.humidity_notification_icon, false);
+                nh.showNotification("Humedad", "¿También has notado lo seco que está el ambiente?", Constantes.CHANNEL_HUMIDITY, R.mipmap.humidity_notification_icon, false);
             }
             else if (dispositivoNew.getHumidity().getValue() <= 50) {
-                nh.showNotification("Humedad", "¡Hace la humedad perfecta para jugar a la play!", Constantes.CHANNEL_LIGHT, R.mipmap.humidity_notification_icon, false);
+                nh.showNotification("Humedad", "¡Hace la humedad perfecta para jugar a la play!", Constantes.CHANNEL_HUMIDITY, R.mipmap.humidity_notification_icon, false);
             }
             else if (dispositivoNew.getHumidity().getValue() <= 75) {
-                nh.showNotification("Humedad", "Noto que estoy empezando a sudar y soy un móvil...", Constantes.CHANNEL_LIGHT, R.mipmap.humidity_notification_icon, false);
+                nh.showNotification("Humedad", "Noto que estoy empezando a sudar y soy un móvil...", Constantes.CHANNEL_HUMIDITY, R.mipmap.humidity_notification_icon, false);
             }
             else if (dispositivoNew.getHumidity().getValue() <= 100) {
-                nh.showNotification("Humedad", "¡Esto es peor que el Amazonas!", Constantes.CHANNEL_LIGHT, R.mipmap.humidity_notification_icon, false);
+                nh.showNotification("Humedad", "¡Esto es peor que el Amazonas!", Constantes.CHANNEL_HUMIDITY, R.mipmap.humidity_notification_icon, false);
             }
             dispositivoOld.getHumidity().setValue(dispositivoNew.getHumidity().getValue());  // Se guarda el nuevo valor en el objeto antiguo para ser comaparado de nuevo
         }
         else if (changes.equalsIgnoreCase("light")) {
             if (dispositivoNew.getLight().getState().equalsIgnoreCase("on")) {
-                nh.showNotification("Luz", "¡Alguien encendió la luz!", Constantes.CHANNEL_LIGHT, R.mipmap.light_on_notification_icon, false);
+                nh.showNotification("Luz", "¡Alguien encendió la luz!", Constantes.CHANNEL_LIGHT, R.mipmap.light_on_notification_icon, true);
             }
             else if (dispositivoNew.getLight().getState().equalsIgnoreCase("off")) {
-                nh.showNotification("Luz", "¡Alguien apagó la luz!", Constantes.CHANNEL_LIGHT, R.mipmap.light_off_notification_icon, false);
+                nh.showNotification("Luz", "¡Alguien apagó la luz!", Constantes.CHANNEL_LIGHT, R.mipmap.light_off_notification_icon, true);
             }
             dispositivoOld.getLight().setState(dispositivoNew.getLight().getState());  // Se guarda el nuevo valor en el objeto antiguo para ser comaparado de nuevo
         }
         else if (changes.equalsIgnoreCase("plug")) {
             if (dispositivoNew.getPlug().getState().equalsIgnoreCase("on")) {
-                nh.showNotification("Enchufe", "¡Alguien activó el enchufe!", Constantes.CHANNEL_PLUG, R.mipmap.connected_icon, false);
+                nh.showNotification("Enchufe", "¡Alguien activó el enchufe!", Constantes.CHANNEL_PLUG, R.mipmap.connected_icon, true);
             }
             else if (dispositivoNew.getPlug().getState().equalsIgnoreCase("off")) {
-                nh.showNotification("Enchufe", "¡Alguien desactivó el enchufe!", Constantes.CHANNEL_PLUG, R.mipmap.disconnected_icon, false);
+                nh.showNotification("Enchufe", "¡Alguien desactivó el enchufe!", Constantes.CHANNEL_PLUG, R.mipmap.disconnected_icon, true);
             }
             dispositivoOld.getPlug().setState(dispositivoNew.getPlug().getState());  // Se guarda el nuevo valor en el objeto antiguo para ser comaparado de nuevo
         }

@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import com.quadram.futh.helper.Constantes;
 
+import java.util.Arrays;
+
 public class MessageReplyReceiver extends BroadcastReceiver {
     private static String KEY_NOTIFICATION_ID = "key_noticiation_id";
     private static String KEY_MESSAGE_ID = "key_message_id";
@@ -28,8 +30,9 @@ public class MessageReplyReceiver extends BroadcastReceiver {
             // do whatever you want with the message. Send to the server or add to the db.
             // for this tutorial, we'll just show it in a toast;
             CharSequence message = getMessageText(intent);
+            String channel = intent.getStringExtra("channel");
 
-            Toast.makeText(context, "Reply: " + message, Toast.LENGTH_LONG).show();
+            processReply(context, channel, message);
 
             NotificationManagerCompat.from(context).cancel(Constantes.NOTIFICATION_ID_INT);  // Se cancela la notificacion una vez ha sido respondida
         }
@@ -41,5 +44,17 @@ public class MessageReplyReceiver extends BroadcastReceiver {
             return remoteInput.getCharSequence(Constantes.VOICE_REPLY);
         }
         return "";
+    }
+
+    private void processReply(Context context, String channel, CharSequence message) {
+        if (channel.equalsIgnoreCase(Constantes.CHANNEL_LIGHT)) {
+            if (Arrays.asList(Constantes.COMANDOS_ENCENDER_LUZ).contains(message)) {
+                Toast.makeText(context, "Reply: Encendiendo la luz ahora mismo", Toast.LENGTH_LONG).show();
+            }
+            else if (Arrays.asList(Constantes.COMANDOS_APAGAR_LUZ).contains(message)) {
+                Toast.makeText(context, "Reply: Apagando la luz ahora mismo", Toast.LENGTH_LONG).show();
+            }
+        }
+        Toast.makeText(context, "Reply: " + message, Toast.LENGTH_LONG).show();
     }
 }

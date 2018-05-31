@@ -12,4 +12,44 @@ public class Constantes {
     public static final String CHANNEL_LIGHT = "Light";
     public static final String CHANNEL_PLUG = "Plug";
     public static final String CHANNEL_TEMPERATURE = "Temperature";
+
+    // COMANDOS DE VOZ PARA NOTIFICACIONES DE LUZ
+    public static final String[] COMANDOS_ENCENDER_LUZ = {
+            "Enciende la de nuevo",
+            "Enciéndeme la de nuevo",
+            "Enciende la luz de nuevo",
+            "Enciende la luz ahora mismo",
+            "Yo no he dado permiso para que enciendan la luz",
+            "Yo no he dado permiso para que se encienda la luz",
+            "Yo no he dado permiso para que encienda la luz"
+    };
+    public static final String[] COMANDOS_APAGAR_LUZ = {
+            "Apaga la de nuevo",
+            "Apágame la de nuevo",
+            "Apaga la luz de nuevo",
+            "Apaga la luz ahora mismo",
+            "Yo no he dado permiso para que apaguen la luz",
+            "Yo no he dado permiso para que se apague la luz",
+            "Yo no he dado permiso para que apague la luz"
+    };
+
+    // COMANDOS DE VOZ PARA NOTIFICACIONES DE ENCHUFE
+    public static final String[] COMANDOS_ACTIVAR_ENCHUFE = {
+            "Enciende la de nuevo",
+            "Enciéndeme la de nuevo",
+            "Enciende la luz de nuevo",
+            "Enciende la luz ahora mismo",
+            "Yo no he dado permiso para que enciendan la luz",
+            "Yo no he dado permiso para que se encienda la luz",
+            "Yo no he dado permiso para que encienda la luz"
+    };
+    public static final String[] COMANDOS_DESACTIVAR_ENCHUFE = {
+            "Apaga la de nuevo",
+            "Apágame la de nuevo",
+            "Apaga la luz de nuevo",
+            "Apaga la luz ahora mismo",
+            "Yo no he dado permiso para que apaguen la luz",
+            "Yo no he dado permiso para que se apague la luz",
+            "Yo no he dado permiso para que apague la luz"
+    };
 }
