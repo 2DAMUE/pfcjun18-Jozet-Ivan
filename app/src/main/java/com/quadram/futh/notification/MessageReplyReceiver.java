@@ -34,21 +34,17 @@ public class MessageReplyReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Constantes.REPLY_ACTION.equals(intent.getAction())) {
-            // do whatever you want with the message. Send to the server or add to the db.
-            // for this tutorial, we'll just show it in a toast;
             CharSequence message = getMessageText(intent);
             String channel = intent.getStringExtra("channel");
 
-            processReply(context, channel, message);
-
-            NotificationManagerCompat.from(context).cancel(Constantes.NOTIFICATION_ID_INT);  // Se cancela la notificacion una vez ha sido respondida
+            processReply(context, channel, message);  // Se procesa el tipo de notificacion y la respuesta obtenida
         }
     }
 
     private CharSequence getMessageText(Intent intent) {
         Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
         if (remoteInput != null) {
-            return remoteInput.getCharSequence(Constantes.VOICE_REPLY);
+            return remoteInput.getCharSequence(Constantes.VOICE_REPLY);  // Se obtiene la respuesta de voz
         }
         return "";
     }
@@ -56,34 +52,35 @@ public class MessageReplyReceiver extends BroadcastReceiver {
     private void processReply(final Context context, String channel, CharSequence message) {
         final DatabaseReference mReference = FirebaseDatabase.getInstance().getReference("devices/0x00000001/");
 
-        if (channel.equalsIgnoreCase(Constantes.CHANNEL_LIGHT)) {
-            if (Arrays.asList(Constantes.COMANDOS_ENCENDER_LUZ).contains(message)) {
-                Toast.makeText(context, "Encendiendo luz...", Toast.LENGTH_LONG).show();
-                mReference.child("rele1/state").setValue("on");
+        if (channel.equalsIgnoreCase(Constantes.CHANNEL_LIGHT)) {  // Si la notificacion es de luz
+            if (Arrays.asList(Constantes.COMANDOS_ENCENDER_LUZ).contains(message)) {  // Si la respuesta obtenida coincide con algun comando de encender luz
+                //Toast.makeText(context, "Encendiendo luz...", Toast.LENGTH_LONG).show();
+                mReference.child("rele1/state").setValue("on");  // Encendemos la luz
             }
-            else if (Arrays.asList(Constantes.COMANDOS_APAGAR_LUZ).contains(message)) {
-                Toast.makeText(context, "Apagando luz...", Toast.LENGTH_LONG).show();
-                mReference.child("rele1/state").setValue("off");
-            }
-        }
-        else if (channel.equalsIgnoreCase(Constantes.CHANNEL_PLUG)) {
-            if (Arrays.asList(Constantes.COMANDOS_ACTIVAR_ENCHUFE).contains(message)) {
-                Toast.makeText(context, "Activando enchufe...", Toast.LENGTH_LONG).show();
-                mReference.child("rele2/state").setValue("on");
-            }
-            else if (Arrays.asList(Constantes.COMANDOS_DESACTIVAR_ENCHUFE).contains(message)) {
-                Toast.makeText(context, "Desactivando enchufe...", Toast.LENGTH_LONG).show();
-                mReference.child("rele2/state").setValue("off");
+            else if (Arrays.asList(Constantes.COMANDOS_APAGAR_LUZ).contains(message)) {  // Si la respuesta obtenida coincide con algun comando de apagar luz
+                //Toast.makeText(context, "Apagando luz...", Toast.LENGTH_LONG).show();
+                mReference.child("rele1/state").setValue("off");  // Apagamos la luz
             }
         }
-        else if (channel.equalsIgnoreCase(Constantes.CHANNEL_GAS)) {
-            if (Arrays.asList(Constantes.COMANDOS_ESTADO_GAS).contains(message)) {
-                Toast.makeText(context, "Leyendo estado del gas...", Toast.LENGTH_LONG).show();
+        else if (channel.equalsIgnoreCase(Constantes.CHANNEL_PLUG)) {  // Si la notificacion es de enchufe
+            if (Arrays.asList(Constantes.COMANDOS_ACTIVAR_ENCHUFE).contains(message)) {  // Si la respuesta obtenida coincide con algun comando de activar enchufe
+                //Toast.makeText(context, "Activando enchufe...", Toast.LENGTH_LONG).show();
+                mReference.child("rele2/state").setValue("on");  // Activamos el enchufe
+            }
+            else if (Arrays.asList(Constantes.COMANDOS_DESACTIVAR_ENCHUFE).contains(message)) {  // Si la respuesta obtenida coincide con algun comando de desactivar enchufe
+                //Toast.makeText(context, "Desactivando enchufe...", Toast.LENGTH_LONG).show();
+                mReference.child("rele2/state").setValue("off");  // Desactivamos el enchufe
+            }
+        }
+        else if (channel.equalsIgnoreCase(Constantes.CHANNEL_GAS)) {  // Si la notificacion es de gas
+            if (Arrays.asList(Constantes.COMANDOS_ESTADO_GAS).contains(message)) {  // Si la respuesta obtenida coincide con algun comando para conocer el nivel de riesgo de gas
+                //Toast.makeText(context, "Leyendo estado del gas...", Toast.LENGTH_LONG).show();
                 mReference.child("gas1/risk").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
-                        int risk = Integer.parseInt(snapshot.getValue().toString());
+                        int risk = Integer.parseInt(snapshot.getValue().toString());  // Se obtiene el valor solicitado
 
+                        // Mostramos una nueva notificacion con los datos solicitados
                         new NotificationHelper(context).showNotification(Constantes.CHANNEL_GAS, "El riesgo de gas es de nivel "+risk, Constantes.CHANNEL_GAS, R.mipmap.gas_risk_one_icon, false);
 
                         mReference.removeEventListener(this);  // Se elimina el listener una vez se recupero el dato correspondiente
@@ -93,14 +90,15 @@ public class MessageReplyReceiver extends BroadcastReceiver {
                 });
             }
         }
-        else if (channel.equalsIgnoreCase(Constantes.CHANNEL_HUMIDITY)) {
-            if (Arrays.asList(Constantes.COMANDOS_VALOR_HUMEDAD).contains(message)) {
-                Toast.makeText(context, "Leyendo valor de humedad...", Toast.LENGTH_LONG).show();
+        else if (channel.equalsIgnoreCase(Constantes.CHANNEL_HUMIDITY)) {  // Si la notificacion es de humedad
+            if (Arrays.asList(Constantes.COMANDOS_VALOR_HUMEDAD).contains(message)) {  // Si la respuesta obtenida coincide con algun comando para conocer el porcentaje de humedad
+                //Toast.makeText(context, "Leyendo valor de humedad...", Toast.LENGTH_LONG).show();
                 mReference.child("humidity1/value").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
-                        float value = Float.parseFloat(snapshot.getValue().toString());
+                        float value = Float.parseFloat(snapshot.getValue().toString());  // Se obtiene el valor solicitado
 
+                        // Mostramos una nueva notificacion con los datos solicitados
                         new NotificationHelper(context).showNotification(Constantes.CHANNEL_HUMIDITY, "La humedad es del "+value+" por ciento", Constantes.CHANNEL_HUMIDITY, R.mipmap.humidity_notification_icon, false);
 
                         mReference.removeEventListener(this);  // Se elimina el listener una vez se recupero el dato correspondiente
@@ -110,14 +108,15 @@ public class MessageReplyReceiver extends BroadcastReceiver {
                 });
             }
         }
-        else if (channel.equalsIgnoreCase(Constantes.CHANNEL_TEMPERATURE)) {
-            if (Arrays.asList(Constantes.COMANDOS_VALOR_TEMPERATURA).contains(message)) {
-                Toast.makeText(context, "Leyendo valor de temperatura...", Toast.LENGTH_LONG).show();
+        else if (channel.equalsIgnoreCase(Constantes.CHANNEL_TEMPERATURE)) {  // Si la notificacion es de temperatura
+            if (Arrays.asList(Constantes.COMANDOS_VALOR_TEMPERATURA).contains(message)) {  // Si la respuesta obtenida coincide con algun comando para conocer la temperatura
+                //Toast.makeText(context, "Leyendo valor de temperatura...", Toast.LENGTH_LONG).show();
                 mReference.child("temperature1/value").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
-                        float value = Float.parseFloat(snapshot.getValue().toString());
+                        float value = Float.parseFloat(snapshot.getValue().toString());  // Se obtiene el valor solicitado
 
+                        // Mostramos una nueva notificacion con los datos solicitados
                         new NotificationHelper(context).showNotification(Constantes.CHANNEL_TEMPERATURE, "La temperatura es de "+value+" grados", Constantes.CHANNEL_TEMPERATURE, R.mipmap.notification_temperature_icon, false);
 
                         mReference.removeEventListener(this);  // Se elimina el listener una vez se recupero el dato correspondiente
@@ -127,7 +126,8 @@ public class MessageReplyReceiver extends BroadcastReceiver {
                 });
             }
         }
-        Toast.makeText(context, "Reply: " + message, Toast.LENGTH_LONG).show();
+        //Toast.makeText(context, "Reply: " + message, Toast.LENGTH_LONG).show();
         Log.d("REPLY", message.toString());
+        NotificationManagerCompat.from(context).cancel(Constantes.NOTIFICATION_ID_INT);  // Se cancela la notificacion una vez ha sido respondida
     }
 }
