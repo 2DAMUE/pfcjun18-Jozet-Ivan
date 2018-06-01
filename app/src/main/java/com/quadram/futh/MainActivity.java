@@ -336,12 +336,6 @@ public class MainActivity extends AppCompatActivity
         reference.child("users").child(currentUser.getUid()).child("devices").addListenerForSingleValueEvent(vel);
     }
 
-    private void checkIfDeviceExists(String idDevice) {
-        // Se comprueba si es la primera vez que inicia sesion y se le asigna un perfil en Real-Time Database
-        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-
-    }
-
     // Funcion para obtener la clave a partir de un valor en un Map
     public Object getKeyFromValue(Map hm, Object value) {
         for (Object o : hm.keySet()) {

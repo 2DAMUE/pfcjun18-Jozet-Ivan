@@ -8,6 +8,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
 import android.widget.Toast;
 
+import com.google.firebase.database.FirebaseDatabase;
 import com.quadram.futh.helper.Constantes;
 
 import java.util.Arrays;
@@ -50,17 +51,21 @@ public class MessageReplyReceiver extends BroadcastReceiver {
         if (channel.equalsIgnoreCase(Constantes.CHANNEL_LIGHT)) {
             if (Arrays.asList(Constantes.COMANDOS_ENCENDER_LUZ).contains(message)) {
                 Toast.makeText(context, "Encendiendo la luz ahora mismo", Toast.LENGTH_LONG).show();
+                FirebaseDatabase.getInstance().getReference("devices/0x00000001/rele1/state").setValue("on");
             }
             else if (Arrays.asList(Constantes.COMANDOS_APAGAR_LUZ).contains(message)) {
                 Toast.makeText(context, "Apagando la luz ahora mismo", Toast.LENGTH_LONG).show();
+                FirebaseDatabase.getInstance().getReference("devices/0x00000001/rele1/state").setValue("off");
             }
         }
         else if (channel.equalsIgnoreCase(Constantes.CHANNEL_PLUG)) {
             if (Arrays.asList(Constantes.COMANDOS_ACTIVAR_ENCHUFE).contains(message)) {
                 Toast.makeText(context, "Activando el enchufe ahora mismo", Toast.LENGTH_LONG).show();
+                FirebaseDatabase.getInstance().getReference("devices/0x00000001/rele2/state").setValue("on");
             }
             else if (Arrays.asList(Constantes.COMANDOS_DESACTIVAR_ENCHUFE).contains(message)) {
                 Toast.makeText(context, "Desactivando el enchufe ahora mismo", Toast.LENGTH_LONG).show();
+                FirebaseDatabase.getInstance().getReference("devices/0x00000001/rele2/state").setValue("off");
             }
         }
         Toast.makeText(context, "Reply: " + message, Toast.LENGTH_LONG).show();

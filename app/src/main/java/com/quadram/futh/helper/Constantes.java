@@ -21,7 +21,8 @@ public class Constantes {
             "Enciende la luz ahora mismo",
             "Yo no he dado permiso para que apaguen la luz",
             "Yo no he dado permiso para que se apague la luz",
-            "Yo no he dado permiso para que apague la luz"
+            "Yo no he dado permiso para que apague la luz",
+            "Encender"
     };
     public static final String[] COMANDOS_APAGAR_LUZ = {
             "Apaga la de nuevo",
@@ -31,6 +32,7 @@ public class Constantes {
             "Yo no he dado permiso para que enciendan la luz",
             "Yo no he dado permiso para que se encienda la luz",
             "Yo no he dado permiso para que encienda la luz",
+            "Apagar"
     };
 
     // COMANDOS DE VOZ PARA NOTIFICACIONES DE ENCHUFE
@@ -41,7 +43,8 @@ public class Constantes {
             "Activa el enchufe ahora mismo",
             "Yo no he dado permiso para que desactiven el enchufe",
             "Yo no he dado permiso para que se desactive el enchufe",
-            "Yo no he dado permiso para que desactive el enchufe"
+            "Yo no he dado permiso para que desactive el enchufe",
+            "Activar"
     };
     public static final String[] COMANDOS_DESACTIVAR_ENCHUFE = {
             "Desactiva lo de nuevo",
@@ -50,6 +53,7 @@ public class Constantes {
             "Desactiva el enchufe ahora mismo",
             "Yo no he dado permiso para que activen el enchufe",
             "Yo no he dado permiso para que se active el enchufe",
-            "Yo no he dado permiso para que active el enchufe"
+            "Yo no he dado permiso para que active el enchufe",
+            "Desactivar"
     };
 }
