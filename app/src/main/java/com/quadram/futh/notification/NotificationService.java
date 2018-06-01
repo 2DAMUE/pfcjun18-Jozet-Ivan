@@ -45,8 +45,11 @@ public class NotificationService extends IntentService {
     }
 
     // Creates an Intent that will be triggered when a voice reply is received.
-    private Intent getMessageReplyIntent(int conversationId) {
-        return new Intent().setAction(Constantes.REPLY_ACTION).putExtra(Constantes.NOTIFICATION_ID_STRING, conversationId);
+    private Intent getMessageReplyIntent(int conversationId, String channel) {
+        return new Intent()
+                .setAction(Constantes.REPLY_ACTION)
+                .putExtra("channel", channel)
+                .putExtra(Constantes.NOTIFICATION_ID_STRING, conversationId);
     }
 
     private void sendNotification(
@@ -71,7 +74,7 @@ public class NotificationService extends IntentService {
         PendingIntent replyIntent = PendingIntent.getBroadcast(
                 getApplicationContext(),
                 conversationId,
-                getMessageReplyIntent(conversationId),
+                getMessageReplyIntent(conversationId, channel),
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         /// TODO: Add the code to create the UnreadConversation.
@@ -167,16 +170,16 @@ public class NotificationService extends IntentService {
             // start a
             // (i)  broadcast receiver which runs on the UI thread or
             // (ii) service for a background task to b executed , but for the purpose of this codelab, will be doing a broadcast receiver
-            intent = MessageReplyReceiver.getReplyMessageIntent(this, Constantes.NOTIFICATION_ID_INT, 1);
+            intent = MessageReplyReceiver.getReplyMessageIntent(getApplicationContext(), Constantes.NOTIFICATION_ID_INT, 1);
             intent.putExtra("channel", channel);
             return PendingIntent.getBroadcast(getApplicationContext(), 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
         else {
             // start your activity
-            intent = MessageReplyReceiver.getReplyMessageIntent(this, Constantes.NOTIFICATION_ID_INT, 1);
+            intent = MessageReplyReceiver.getReplyMessageIntent(getApplicationContext(), Constantes.NOTIFICATION_ID_INT, 1);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("channel", channel);
-            return PendingIntent.getActivity(this, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            return PendingIntent.getActivity(getApplicationContext(), 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
     }
 }

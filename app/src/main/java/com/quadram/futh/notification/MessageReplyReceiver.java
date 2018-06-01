@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.database.FirebaseDatabase;
@@ -69,5 +70,6 @@ public class MessageReplyReceiver extends BroadcastReceiver {
             }
         }
         Toast.makeText(context, "Reply: " + message, Toast.LENGTH_LONG).show();
+        Log.d("REPLY", message.toString());
     }
 }
