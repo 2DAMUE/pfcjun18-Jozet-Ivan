@@ -49,10 +49,18 @@ public class MessageReplyReceiver extends BroadcastReceiver {
     private void processReply(Context context, String channel, CharSequence message) {
         if (channel.equalsIgnoreCase(Constantes.CHANNEL_LIGHT)) {
             if (Arrays.asList(Constantes.COMANDOS_ENCENDER_LUZ).contains(message)) {
-                Toast.makeText(context, "Reply: Encendiendo la luz ahora mismo", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Encendiendo la luz ahora mismo", Toast.LENGTH_LONG).show();
             }
             else if (Arrays.asList(Constantes.COMANDOS_APAGAR_LUZ).contains(message)) {
-                Toast.makeText(context, "Reply: Apagando la luz ahora mismo", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Apagando la luz ahora mismo", Toast.LENGTH_LONG).show();
+            }
+        }
+        else if (channel.equalsIgnoreCase(Constantes.CHANNEL_PLUG)) {
+            if (Arrays.asList(Constantes.COMANDOS_ACTIVAR_ENCHUFE).contains(message)) {
+                Toast.makeText(context, "Activando el enchufe ahora mismo", Toast.LENGTH_LONG).show();
+            }
+            else if (Arrays.asList(Constantes.COMANDOS_DESACTIVAR_ENCHUFE).contains(message)) {
+                Toast.makeText(context, "Desactivando el enchufe ahora mismo", Toast.LENGTH_LONG).show();
             }
         }
         Toast.makeText(context, "Reply: " + message, Toast.LENGTH_LONG).show();

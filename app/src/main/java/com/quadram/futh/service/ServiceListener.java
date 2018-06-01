@@ -23,7 +23,6 @@ import com.quadram.futh.model.Relay;
 import com.quadram.futh.model.Temperature;
 import com.quadram.futh.notification.NotificationHelper;
 
-// TODO: Implementar notificaciones
 public class ServiceListener extends Service {
     private final IBinder mBinder;
     private static ServiceListener INSTANCE = null;
