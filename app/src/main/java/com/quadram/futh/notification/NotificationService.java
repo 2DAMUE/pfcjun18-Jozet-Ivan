@@ -116,10 +116,10 @@ public class NotificationService extends IntentService {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(getApplicationContext(), channel)  // Obtenemos el contexto y le asignamos a que grupo de notificaciones pertenece
                         .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
-                        .setSmallIcon(R.mipmap.notification_small_icon)
+                        .setSmallIcon(R.mipmap.notification_small_icon_white)
                         .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), icon))
                         .setWhen(timestamp)
-                        .setColor(Color.WHITE)
+                        .setColor(Color.BLACK)  // Se establece el color de fondo de la notificacion cuando se use el smallIcon
                         .setAutoCancel(true)
                         .setContentTitle(sender)
                         .setContentText(message)
@@ -132,7 +132,6 @@ public class NotificationService extends IntentService {
         if (hasReply) {  // Si se ha indicado que la notificacion debe tener respuesta se le añade
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) builder.addAction(replyAction);  // Aunque se quiera respuesta, solo se permite para versiones superiores a Android N
         }
-        /// End
 
         Log.d(TAG, "Sending notification " + conversationId + " conversation: " + message);
         NotificationManagerCompat.from(this).notify(conversationId, builder.build());

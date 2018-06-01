@@ -132,19 +132,19 @@ public class ServiceListener extends Service {
         }
         else if (changes.equalsIgnoreCase("light")) {
             if (dispositivoNew.getLight().getState().equalsIgnoreCase("on")) {
-                nh.showNotification("Luz", "¡Alguien encendió la luz!", Constantes.CHANNEL_LIGHT, R.mipmap.light_on_notification_icon, true);
+                nh.showNotification("Luz", "¡Alguien encendió la luz!", Constantes.CHANNEL_LIGHT, R.mipmap.light_on_notification_icon, false);
             }
             else if (dispositivoNew.getLight().getState().equalsIgnoreCase("off")) {
-                nh.showNotification("Luz", "¡Alguien apagó la luz!", Constantes.CHANNEL_LIGHT, R.mipmap.light_off_notification_icon, true);
+                nh.showNotification("Luz", "¡Alguien apagó la luz!", Constantes.CHANNEL_LIGHT, R.mipmap.light_off_notification_icon, false);
             }
             dispositivoOld.getLight().setState(dispositivoNew.getLight().getState());  // Se guarda el nuevo valor en el objeto antiguo para ser comaparado de nuevo
         }
         else if (changes.equalsIgnoreCase("plug")) {
             if (dispositivoNew.getPlug().getState().equalsIgnoreCase("on")) {
-                nh.showNotification("Enchufe", "¡Alguien activó el enchufe!", Constantes.CHANNEL_PLUG, R.mipmap.connected_icon, true);
+                nh.showNotification("Enchufe", "¡Alguien activó el enchufe!", Constantes.CHANNEL_PLUG, R.mipmap.connected_icon, false);
             }
             else if (dispositivoNew.getPlug().getState().equalsIgnoreCase("off")) {
-                nh.showNotification("Enchufe", "¡Alguien desactivó el enchufe!", Constantes.CHANNEL_PLUG, R.mipmap.disconnected_icon, true);
+                nh.showNotification("Enchufe", "¡Alguien desactivó el enchufe!", Constantes.CHANNEL_PLUG, R.mipmap.disconnected_icon, false);
             }
             dispositivoOld.getPlug().setState(dispositivoNew.getPlug().getState());  // Se guarda el nuevo valor en el objeto antiguo para ser comaparado de nuevo
         }

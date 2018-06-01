@@ -56,4 +56,49 @@ public class Constantes {
             "Yo no he dado permiso para que active el enchufe",
             "Desactivar"
     };
+
+    // COMANDOS DE VOZ PARA NOTIFICACIONES DE GAS
+    public static final String[] COMANDOS_ESTADO_GAS = {
+            "Muéstrame el estado del gas",
+            "Ver el estado del gas",
+            "Qué nivel de gas hay en mi casa",
+            "En qué nivel está",
+            "En qué nivel está el gas",
+            "En qué nivel de riesgo está el gas",
+            "Qué nivel de riesgo hay"
+    };
+
+    // COMANDOS DE VOZ PARA NOTIFICACIONES DE HUMEDAD
+    public static final String[] COMANDOS_VALOR_HUMEDAD = {
+            "Qué humedad hace en mi casa",
+            "Qué humedad hace en casa",
+            "Qué humedad hace",
+            "Muéstrame la humedad que hace en mi casa",
+            "Muéstrame la humedad que hace en casa",
+            "Muéstrame la humedad que hace",
+            "Muéstrame la humedad",
+            "Dime la humedad que hace en mi casa",
+            "Dime la humedad que hace en casa",
+            "Dime la humedad que hace",
+            "Dime la humedad"
+    };
+
+    // COMANDOS DE VOZ PARA NOTIFICACIONES DE TEMPERATURA
+    public static final String[] COMANDOS_VALOR_TEMPERATURA = {
+            "Qué temperatura hace en mi casa",
+            "Qué temperatura hace en casa",
+            "Qué temperatura hace",
+            "Cuál es la temperatura que hace en mi casa",
+            "Cuál es la temperatura que hace en casa",
+            "Cuál es la temperatura que hace",
+            "Cuál es la temperatura",
+            "Muéstrame la temperatura que hace en mi casa",
+            "Muéstrame la temperatura que hace en casa",
+            "Muéstrame la temperatura que hace",
+            "Muéstrame la temperatura",
+            "Dime la temperatura que hace en mi casa",
+            "Dime la temperatura que hace en casa",
+            "Dime la temperatura que hace",
+            "Dime la temperatura"
+    };
 }
