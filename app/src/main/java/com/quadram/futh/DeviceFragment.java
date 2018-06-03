@@ -153,17 +153,18 @@ public class DeviceFragment extends Fragment {
     }
 
     private void rellenarCardView() {
+        // GAS
         txvGasName.setText(device.getGas().getName());
         txvGasRisk.setText(String.valueOf(device.getGas().getRisk()));
         imgGas.setImageResource(R.drawable.ic_gas_icon_vector);
 
-
+        // HUMEDAD
         txvHumidityName.setText(device.getHumidity().getName());
         txvHumidityValue.setText(String.valueOf(device.getHumidity().getValue()));
         imgHumidity.setImageResource(R.drawable.ic_humidity_icon_vector);
 
+        // LUZ
         txvRele1Name.setText(device.getLight().getName());
-
         if(device.getLight().getState().equals("on")){
             imgRele1.setImageResource(R.drawable.ic_light_on_icon_vector);
         }
@@ -171,9 +172,8 @@ public class DeviceFragment extends Fragment {
             imgRele1.setImageResource(R.drawable.ic_light_off_icon_vector);
         }
 
-
+        // ENCHUFE
         txvRele2Name.setText(device.getPlug().getName());
-
         if(device.getPlug().getState().equals("on")){
             imgRele2.setImageResource(R.drawable.ic_connected_icon_vector);
         }
@@ -181,10 +181,10 @@ public class DeviceFragment extends Fragment {
             imgRele2.setImageResource(R.drawable.ic_disconnected_icon_vector);
         }
 
+        // TEMPERATURA
         txvTemperatureName.setText(device.getTemperature().getName());
         txvTemperatureValue.setText(String.valueOf(device.getTemperature().getValue()));
-
-        //imgTemperature.setImageResource(R.drawable.);
+        imgTemperature.setImageResource(R.drawable.ic_temperature_icon_vector);
     }
 
 }

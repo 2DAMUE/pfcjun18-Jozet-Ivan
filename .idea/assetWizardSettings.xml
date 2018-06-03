@@ -19,8 +19,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_humidity_icon_vector" />
-                            <entry key="sourceFile" value="C:\Futh\pfcjun18-Jozet-Ivan\resources\Vectores\humidity_black.svg" />
+                            <entry key="outputName" value="ic_temperature_icon_vector" />
+                            <entry key="sourceFile" value="D:\Escritorio\temperature_icon_vector.svg" />
                           </map>
                         </option>
                       </PersistentState>
