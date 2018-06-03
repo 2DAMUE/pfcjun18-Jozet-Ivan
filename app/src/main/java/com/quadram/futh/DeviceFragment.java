@@ -89,9 +89,6 @@ public class DeviceFragment extends Fragment {
         cvPlug.setOnClickListener((view) -> onClickPlug(view));
         cvTemperature.setOnClickListener((view) -> onClickTemperature(view));
 
-
-
-
         return v;
     }
 
@@ -127,6 +124,7 @@ public class DeviceFragment extends Fragment {
         Log.d("CARDVIEW", "Dentro del cardview onClickTemperature");
     }
 
+
     private void recogerDatosFirebase() {
         vel = new ValueEventListener() {
             @Override
@@ -143,6 +141,7 @@ public class DeviceFragment extends Fragment {
                 else{
                     Toast.makeText(getContext(),"No hay informacion disponible",Toast.LENGTH_LONG).show();
                 }
+                ref.removeEventListener(vel);
             }
 
             @Override
@@ -154,38 +153,38 @@ public class DeviceFragment extends Fragment {
     }
 
     private void rellenarCardView() {
-        // Gas
         txvGasName.setText(device.getGas().getName());
         txvGasRisk.setText(String.valueOf(device.getGas().getRisk()));
-        imgGas.setImageResource(R.mipmap.gas_risk_one_icon);
+        imgGas.setImageResource(R.drawable.ic_gas_icon_vector);
 
-        // Humedad
+
         txvHumidityName.setText(device.getHumidity().getName());
         txvHumidityValue.setText(String.valueOf(device.getHumidity().getValue()));
-        imgHumidity.setImageResource(R.mipmap.humidity_notification_icon);
+        imgHumidity.setImageResource(R.drawable.ic_humidity_icon_vector);
 
-        // Luz
         txvRele1Name.setText(device.getLight().getName());
+
         if(device.getLight().getState().equals("on")){
-            imgRele1.setImageResource(R.mipmap.light_on_notification_icon);
+            imgRele1.setImageResource(R.drawable.ic_light_on_icon_vector);
         }
         else{
-            imgRele1.setImageResource(R.mipmap.light_off_notification_icon);
+            imgRele1.setImageResource(R.drawable.ic_light_off_icon_vector);
         }
 
-        // Enchufe
+
         txvRele2Name.setText(device.getPlug().getName());
+
         if(device.getPlug().getState().equals("on")){
-            imgRele2.setImageResource(R.mipmap.connected_icon);
+            imgRele2.setImageResource(R.drawable.ic_connected_icon_vector);
         }
         else{
-            imgRele2.setImageResource(R.mipmap.disconnected_icon);
+            imgRele2.setImageResource(R.drawable.ic_disconnected_icon_vector);
         }
 
-        // Temperatura
         txvTemperatureName.setText(device.getTemperature().getName());
         txvTemperatureValue.setText(String.valueOf(device.getTemperature().getValue()));
-        imgTemperature.setImageResource(R.mipmap.notification_temperature_icon);
+
+        //imgTemperature.setImageResource(R.drawable.);
     }
 
 }
