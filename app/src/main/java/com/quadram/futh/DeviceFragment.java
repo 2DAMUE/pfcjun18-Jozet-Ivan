@@ -3,6 +3,7 @@ package com.quadram.futh;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +28,8 @@ import com.quadram.futh.model.Temperature;
  */
 public class DeviceFragment extends Fragment {
 
-    private DatabaseReference ref;
-    private DatabaseReference refDevice;
+    private DatabaseReference ref, refDevice;
+    private ValueEventListener vel;
     private Device device;
 
     private ImageView imgGas, imgHumidity, imgRele1, imgRele2, imgTemperature;
@@ -44,11 +45,13 @@ public class DeviceFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_device, container, false);
         String idDevice = getArguments().getString("idDevice");
+
+        ref = FirebaseDatabase.getInstance().getReference();
+        refDevice = ref.child("devices").child(idDevice);
 
         imgGas = v.findViewById(R.id.idGasImg);
         imgHumidity = v.findViewById(R.id.idHumidityImg);
@@ -70,17 +73,29 @@ public class DeviceFragment extends Fragment {
         txvTemperatureValue = v.findViewById(R.id.idTemperatureValue);
 
         device = new Device();
-        recogerDatosFirebase(idDevice);
-        // Inflate the layout for this fragment
+        recogerDatosFirebase();
+
+        // Añadir listener a los cardview
+        CardView cvGas = v.findViewById(R.id.cardViewGas);
+        CardView cvHumidity = v.findViewById(R.id.cardViewHumidity);
+        CardView cvLight = v.findViewById(R.id.cardViewLight);
+        CardView cvPlug = v.findViewById(R.id.cardViewPlug);
+        CardView cvTemperature = v.findViewById(R.id.cardViewTemperature);
+
+        cvGas.setOnClickListener((view) -> onClickGas(view));
+
+
+
+
         return v;
     }
 
-    private void recogerDatosFirebase(String idDevice) {
+    private void onClickGas(View v) {
 
-        ref = FirebaseDatabase.getInstance().getReference();
-        refDevice = ref.child("devices").child(idDevice);
+    }
 
-        refDevice.addValueEventListener(new ValueEventListener() {
+    private void recogerDatosFirebase() {
+        vel = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
@@ -91,34 +106,37 @@ public class DeviceFragment extends Fragment {
                     device.setTemperature(dataSnapshot.child("temperature1").getValue(Temperature.class));
 
                     rellenarCardView();
-                }else{
+                }
+                else{
                     Toast.makeText(getContext(),"No hay informacion disponible",Toast.LENGTH_LONG).show();
                 }
-
+                ref.removeEventListener(vel);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        };
+        refDevice.addValueEventListener(vel);
     }
 
     private void rellenarCardView() {
         txvGasName.setText(device.getGas().getName());
-        txvGasRisk.setText(Integer.toString(device.getGas().getRisk()));
+        txvGasRisk.setText(String.valueOf(device.getGas().getRisk()));
         imgGas.setImageResource(R.mipmap.gas_risk_one_icon);
 
 
         txvHumidityName.setText(device.getHumidity().getName());
-        txvHumidityValue.setText(Float.toString(device.getHumidity().getValue()));
+        txvHumidityValue.setText(String.valueOf(device.getHumidity().getValue()));
         imgHumidity.setImageResource(R.mipmap.humidity_notification_icon);
 
         txvRele1Name.setText(device.getLight().getName());
 
         if(device.getLight().getState().equals("on")){
             imgRele1.setImageResource(R.mipmap.light_on_notification_icon);
-        }else{
+        }
+        else{
             imgRele1.setImageResource(R.mipmap.light_off_notification_icon);
         }
 
@@ -127,12 +145,13 @@ public class DeviceFragment extends Fragment {
 
         if(device.getPlug().getState().equals("on")){
             imgRele2.setImageResource(R.mipmap.connected_icon);
-        }else{
+        }
+        else{
             imgRele2.setImageResource(R.mipmap.disconnected_icon);
         }
 
         txvTemperatureName.setText(device.getTemperature().getName());
-        txvTemperatureValue.setText(Float.toString(device.getTemperature().getValue()));
+        txvTemperatureValue.setText(String.valueOf(device.getTemperature().getValue()));
 
         imgTemperature.setImageResource(R.mipmap.notification_temperature_icon);
     }

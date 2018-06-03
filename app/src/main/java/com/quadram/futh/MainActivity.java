@@ -79,10 +79,10 @@ public class MainActivity extends AppCompatActivity
 
         mBound = false;
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -90,12 +90,7 @@ public class MainActivity extends AppCompatActivity
 
         fabAddDevices = findViewById(R.id.fabAddDevices);
 
-        fabAddDevices.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addDevices();
-            }
-        });
+        fabAddDevices.setOnClickListener(view -> addDevices());
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -121,15 +116,13 @@ public class MainActivity extends AppCompatActivity
 
         firebaseAuth = FirebaseAuth.getInstance();
         currentUser = firebaseAuth.getCurrentUser();
-        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if(user != null){
-                    setUserData(user);
-                }else{
-                    goLoginActivity();
-                }
+        firebaseAuthListener = firebaseAuth -> {
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            if(user != null){
+                setUserData(user);
+            }
+            else{
+                goLoginActivity();
             }
         };
         checkDevices(); // Se comprueba el estado del usuario en Real-Time Database
@@ -192,12 +185,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void addDeviceFirebase(final String idDevice, AlertDialog dialog) {
-        mDevices.add(R.id.gDevices,101,0,idDevice).setIcon(R.drawable.ic_arduino).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                openFragmentDevice(idDevice);
-                return  onOptionsItemSelected(menuItem);
-            }
+        mDevices.add(R.id.gDevices,101,0,idDevice).setIcon(R.drawable.ic_arduino).setOnMenuItemClickListener(menuItem -> {
+            openFragmentDevice(idDevice);
+            return  onOptionsItemSelected(menuItem);
         });
         DatabaseReference refRaiz = FirebaseDatabase.getInstance().getReference();
         DatabaseReference refUsers = refRaiz.child("users").child(firebaseAuth.getCurrentUser().getUid());
@@ -226,7 +216,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -265,19 +255,17 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_logout) {
             firebaseAuth.signOut();
             stopService(new Intent(getApplicationContext(), ServiceListener.class));  // Se detiene el listener de Firebase a la vez que se cierra sesion
-            Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
-                @Override
-                public void onResult(@NonNull Status status) {
-                    if(status.isSuccess()){
-                        goLoginActivity();
-                    }else{
-                        Toast.makeText(getApplicationContext(), R.string.not_close_session, Toast.LENGTH_SHORT).show();
-                    }
+            Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(status -> {
+                if(status.isSuccess()){
+                    goLoginActivity();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), R.string.not_close_session, Toast.LENGTH_SHORT).show();
                 }
             });
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -340,12 +328,9 @@ public class MainActivity extends AppCompatActivity
 
                     for (int i = 0; i < devices.size(); i++) {
                         final int finalI = i;
-                        mDevices.add(devices.get(i)).setIcon(R.drawable.ic_arduino).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem menuItem) {
-                                openFragmentDevice(devices.get(finalI));
-                                return  onOptionsItemSelected(menuItem);
-                            }
+                        mDevices.add(devices.get(i)).setIcon(R.drawable.ic_arduino).setOnMenuItemClickListener(menuItem -> {
+                            openFragmentDevice(devices.get(finalI));
+                            return  onOptionsItemSelected(menuItem);
                         });
                         Log.d("DEVICE", devices.get(i));
                     }
