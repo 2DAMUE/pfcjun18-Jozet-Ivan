@@ -84,6 +84,10 @@ public class DeviceFragment extends Fragment {
         CardView cvTemperature = v.findViewById(R.id.cardViewTemperature);
 
         cvGas.setOnClickListener((view) -> onClickGas(view));
+        cvHumidity.setOnClickListener((view) -> onClickHumidity(view));
+        cvLight.setOnClickListener((view) -> onClickLight(view));
+        cvPlug.setOnClickListener((view) -> onClickPlug(view));
+        cvTemperature.setOnClickListener((view) -> onClickTemperature(view));
 
 
 
@@ -92,7 +96,35 @@ public class DeviceFragment extends Fragment {
     }
 
     private void onClickGas(View v) {
-        Log.d("CARDVIEW", "Dentro del cardview onClick");
+        Log.d("CARDVIEW", "Dentro del cardview onClickGas");
+    }
+
+    private void onClickHumidity(View v) {
+        Log.d("CARDVIEW", "Dentro del cardview onClickHumidity");
+    }
+
+    private void onClickLight(View v) {
+        Log.d("CARDVIEW", "Dentro del cardview onClickLight");
+        if (device.getLight().getState().equalsIgnoreCase("off")) {
+            refDevice.child("rele1").child("state").setValue("on");
+        }
+        else if (device.getLight().getState().equalsIgnoreCase("on")) {
+            refDevice.child("rele1").child("state").setValue("off");
+        }
+    }
+
+    private void onClickPlug(View v) {
+        Log.d("CARDVIEW", "Dentro del cardview onClickPlug");
+        if (device.getPlug().getState().equalsIgnoreCase("off")) {
+            refDevice.child("rele2").child("state").setValue("on");
+        }
+        else if (device.getPlug().getState().equalsIgnoreCase("on")) {
+            refDevice.child("rele2").child("state").setValue("off");
+        }
+    }
+
+    private void onClickTemperature(View v) {
+        Log.d("CARDVIEW", "Dentro del cardview onClickTemperature");
     }
 
     private void recogerDatosFirebase() {
@@ -111,7 +143,6 @@ public class DeviceFragment extends Fragment {
                 else{
                     Toast.makeText(getContext(),"No hay informacion disponible",Toast.LENGTH_LONG).show();
                 }
-                ref.removeEventListener(vel);
             }
 
             @Override
@@ -123,17 +154,18 @@ public class DeviceFragment extends Fragment {
     }
 
     private void rellenarCardView() {
+        // Gas
         txvGasName.setText(device.getGas().getName());
         txvGasRisk.setText(String.valueOf(device.getGas().getRisk()));
         imgGas.setImageResource(R.mipmap.gas_risk_one_icon);
 
-
+        // Humedad
         txvHumidityName.setText(device.getHumidity().getName());
         txvHumidityValue.setText(String.valueOf(device.getHumidity().getValue()));
         imgHumidity.setImageResource(R.mipmap.humidity_notification_icon);
 
+        // Luz
         txvRele1Name.setText(device.getLight().getName());
-
         if(device.getLight().getState().equals("on")){
             imgRele1.setImageResource(R.mipmap.light_on_notification_icon);
         }
@@ -141,9 +173,8 @@ public class DeviceFragment extends Fragment {
             imgRele1.setImageResource(R.mipmap.light_off_notification_icon);
         }
 
-
+        // Enchufe
         txvRele2Name.setText(device.getPlug().getName());
-
         if(device.getPlug().getState().equals("on")){
             imgRele2.setImageResource(R.mipmap.connected_icon);
         }
@@ -151,9 +182,9 @@ public class DeviceFragment extends Fragment {
             imgRele2.setImageResource(R.mipmap.disconnected_icon);
         }
 
+        // Temperatura
         txvTemperatureName.setText(device.getTemperature().getName());
         txvTemperatureValue.setText(String.valueOf(device.getTemperature().getValue()));
-
         imgTemperature.setImageResource(R.mipmap.notification_temperature_icon);
     }
 
