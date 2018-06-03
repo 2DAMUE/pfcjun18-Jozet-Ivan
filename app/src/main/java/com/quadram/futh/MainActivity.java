@@ -171,6 +171,7 @@ public class MainActivity extends AppCompatActivity
                             Toast.makeText(getApplicationContext(), "Debes introducir un ID", Toast.LENGTH_SHORT).show();
                         }
                         else {  // Sincronizamos el dispositivo con el usuario
+                            devicesMap.put(idDevice, idDevice);
                             addDeviceFirebase(idDevice, dialog);
                         }
                         reference.removeEventListener(this);  // Se elimina el listener para liberar memoria
@@ -184,7 +185,7 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    private void addDeviceFirebase(final String idDevice, AlertDialog dialog) {
+    private void addDeviceFirebase(String idDevice, AlertDialog dialog) {
         mDevices.add(R.id.gDevices,101,0,idDevice).setIcon(R.drawable.ic_arduino).setOnMenuItemClickListener(menuItem -> {
             openFragmentDevice(idDevice);
             return  onOptionsItemSelected(menuItem);
@@ -197,6 +198,7 @@ public class MainActivity extends AppCompatActivity
 
     private void openFragmentDevice(String idDevice) {
         Bundle args = new Bundle();
+        idDevice = getKeyFromValue(devicesMap, idDevice).toString();
         args.putString("idDevice", idDevice);
         DeviceFragment df = new DeviceFragment();
         df.setArguments(args);
