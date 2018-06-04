@@ -80,23 +80,6 @@ public class DeviceFragment extends Fragment {
         device = new Device();
         recogerDatosFirebase();
 
-        // Color de los iconos en blanco
-        imgGas.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-        imgHumidity.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-        imgRele1.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-        imgRele2.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-        imgTemperature.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-
-        // Color de los textview en blanco
-        txvGasName.setTextColor(Color.WHITE);
-        txvGasRisk.setTextColor(Color.WHITE);
-        txvHumidityName.setTextColor(Color.WHITE);
-        txvHumidityValue.setTextColor(Color.WHITE);
-        txvRele1Name.setTextColor(Color.WHITE);
-        txvRele2Name.setTextColor(Color.WHITE);
-        txvTemperatureName.setTextColor(Color.WHITE);
-        txvTemperatureValue.setTextColor(Color.WHITE);
-
         // Recuperar los cardview
         cvGas = v.findViewById(R.id.cardViewGas);
         cvHumidity = v.findViewById(R.id.cardViewHumidity);
@@ -194,12 +177,10 @@ public class DeviceFragment extends Fragment {
         if(device.getLight().getState().equals("on")){
             imgRele1.setImageResource(R.drawable.ic_light_on_icon_vector);
             cvLight.setCardBackgroundColor(Color.parseColor("#ffffba"));
-            txvRele1Name.setTextColor(Color.WHITE);
         }
         else {
             imgRele1.setImageResource(R.drawable.ic_light_off_icon_vector);
             cvLight.setCardBackgroundColor(null);
-            txvRele1Name.setTextColor(Color.BLACK);
         }
 
         // ENCHUFE
@@ -207,12 +188,10 @@ public class DeviceFragment extends Fragment {
         if(device.getPlug().getState().equals("on")){
             imgRele2.setImageResource(R.drawable.ic_connected_icon_vector);
             cvPlug.setCardBackgroundColor(Color.parseColor("#baffc9"));
-            txvRele2Name.setTextColor(Color.WHITE);
         }
         else {
             imgRele2.setImageResource(R.drawable.ic_disconnected_icon_vector);
             cvPlug.setCardBackgroundColor(null);
-            txvRele2Name.setTextColor(Color.BLACK);
         }
 
         // TEMPERATURA
