@@ -47,8 +47,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
@@ -58,8 +57,6 @@ public class MainActivity extends AppCompatActivity
 
     private NavigationView navigationView;
     private Menu mDevices;
-
-    private GoogleApiClient googleApiClient;
 
     private ServiceListener mService;
     private boolean mBound;
@@ -105,15 +102,6 @@ public class MainActivity extends AppCompatActivity
         txvNameGoogle = hView.findViewById(R.id.txvNameGoogle);
         txvGmail = hView.findViewById(R.id.txvGmail);
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
         firebaseAuth = FirebaseAuth.getInstance();
         currentUser = firebaseAuth.getCurrentUser();
         firebaseAuthListener = firebaseAuth -> {
@@ -129,8 +117,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void goLoginActivity() {
-        Intent i = new Intent(this,LoginActivity.class);
-        //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent i = new Intent(this, LoginActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
     }
 
@@ -257,14 +245,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_logout) {
             firebaseAuth.signOut();
             stopService(new Intent(getApplicationContext(), ServiceListener.class));  // Se detiene el listener de Firebase a la vez que se cierra sesion
-            Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(status -> {
-                if (status.isSuccess()) {
-                    goLoginActivity();
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), R.string.not_close_session, Toast.LENGTH_SHORT).show();
-                }
-            });
+            finish();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -285,11 +266,6 @@ public class MainActivity extends AppCompatActivity
         if (firebaseAuthListener != null) {
             firebaseAuth.removeAuthStateListener(firebaseAuthListener);
         }
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -332,7 +308,7 @@ public class MainActivity extends AppCompatActivity
                         final int finalI = i;
                         mDevices.add(devices.get(i)).setIcon(R.drawable.ic_arduino).setOnMenuItemClickListener(menuItem -> {
                             openFragmentDevice(devices.get(finalI));
-                            return  onOptionsItemSelected(menuItem);
+                            return onOptionsItemSelected(menuItem);
                         });
                         Log.d("DEVICE", devices.get(i));
                     }
