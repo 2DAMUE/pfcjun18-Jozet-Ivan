@@ -1,6 +1,8 @@
 package com.quadram.futh;
 
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -32,6 +34,8 @@ public class DeviceFragment extends Fragment {
     private DatabaseReference ref, refDevice;
     private ValueEventListener vel;
     private Device device;
+
+    private CardView cvGas, cvHumidity, cvLight, cvPlug, cvTemperature;
 
     private ImageView imgGas, imgHumidity, imgRele1, imgRele2, imgTemperature;
     private TextView  txvGasName, txvGasRisk;
@@ -76,31 +80,53 @@ public class DeviceFragment extends Fragment {
         device = new Device();
         recogerDatosFirebase();
 
-        // Añadir listener a los cardview
-        CardView cvGas = v.findViewById(R.id.cardViewGas);
-        CardView cvHumidity = v.findViewById(R.id.cardViewHumidity);
-        CardView cvLight = v.findViewById(R.id.cardViewLight);
-        CardView cvPlug = v.findViewById(R.id.cardViewPlug);
-        CardView cvTemperature = v.findViewById(R.id.cardViewTemperature);
+        // Color de los iconos en blanco
+        imgGas.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        imgHumidity.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        imgRele1.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        imgRele2.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        imgTemperature.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
 
-        cvGas.setOnClickListener((view) -> onClickGas(view));
-        cvHumidity.setOnClickListener((view) -> onClickHumidity(view));
-        cvLight.setOnClickListener((view) -> onClickLight(view));
-        cvPlug.setOnClickListener((view) -> onClickPlug(view));
-        cvTemperature.setOnClickListener((view) -> onClickTemperature(view));
+        // Color de los textview en blanco
+        txvGasName.setTextColor(Color.WHITE);
+        txvGasRisk.setTextColor(Color.WHITE);
+        txvHumidityName.setTextColor(Color.WHITE);
+        txvHumidityValue.setTextColor(Color.WHITE);
+        txvRele1Name.setTextColor(Color.WHITE);
+        txvRele2Name.setTextColor(Color.WHITE);
+        txvTemperatureName.setTextColor(Color.WHITE);
+        txvTemperatureValue.setTextColor(Color.WHITE);
+
+        // Recuperar los cardview
+        cvGas = v.findViewById(R.id.cardViewGas);
+        cvHumidity = v.findViewById(R.id.cardViewHumidity);
+        cvLight = v.findViewById(R.id.cardViewLight);
+        cvPlug = v.findViewById(R.id.cardViewPlug);
+        cvTemperature = v.findViewById(R.id.cardViewTemperature);
+
+        // COLORES CARDVIEW
+        cvGas.setCardBackgroundColor(Color.parseColor("#ffb3ba"));
+        cvHumidity.setCardBackgroundColor(Color.parseColor("#bae1ff"));
+
+        // Añadir listener a los cardview
+        cvGas.setOnClickListener((view) -> onClickGas());
+        cvHumidity.setOnClickListener((view) -> onClickHumidity());
+        cvLight.setOnClickListener((view) -> onClickLight());
+        cvPlug.setOnClickListener((view) -> onClickPlug());
+        cvTemperature.setOnClickListener((view) -> onClickTemperature());
 
         return v;
     }
 
-    private void onClickGas(View v) {
+    private void onClickGas() {
         Log.d("CARDVIEW", "Dentro del cardview onClickGas");
     }
 
-    private void onClickHumidity(View v) {
+    private void onClickHumidity() {
         Log.d("CARDVIEW", "Dentro del cardview onClickHumidity");
     }
 
-    private void onClickLight(View v) {
+    private void onClickLight() {
         Log.d("CARDVIEW", "Dentro del cardview onClickLight");
         if (device.getLight().getState().equalsIgnoreCase("off")) {
             refDevice.child("rele1").child("state").setValue("on");
@@ -110,7 +136,7 @@ public class DeviceFragment extends Fragment {
         }
     }
 
-    private void onClickPlug(View v) {
+    private void onClickPlug() {
         Log.d("CARDVIEW", "Dentro del cardview onClickPlug");
         if (device.getPlug().getState().equalsIgnoreCase("off")) {
             refDevice.child("rele2").child("state").setValue("on");
@@ -120,7 +146,7 @@ public class DeviceFragment extends Fragment {
         }
     }
 
-    private void onClickTemperature(View v) {
+    private void onClickTemperature() {
         Log.d("CARDVIEW", "Dentro del cardview onClickTemperature");
     }
 
@@ -138,7 +164,7 @@ public class DeviceFragment extends Fragment {
 
                     rellenarCardView();
                 }
-                else{
+                else {
                     Toast.makeText(getContext(),"No hay informacion disponible",Toast.LENGTH_LONG).show();
                 }
                 ref.removeEventListener(vel);
@@ -167,18 +193,26 @@ public class DeviceFragment extends Fragment {
         txvRele1Name.setText(device.getLight().getName());
         if(device.getLight().getState().equals("on")){
             imgRele1.setImageResource(R.drawable.ic_light_on_icon_vector);
+            cvLight.setCardBackgroundColor(Color.parseColor("#ffffba"));
+            txvRele1Name.setTextColor(Color.WHITE);
         }
-        else{
+        else {
             imgRele1.setImageResource(R.drawable.ic_light_off_icon_vector);
+            cvLight.setCardBackgroundColor(null);
+            txvRele1Name.setTextColor(Color.BLACK);
         }
 
         // ENCHUFE
         txvRele2Name.setText(device.getPlug().getName());
         if(device.getPlug().getState().equals("on")){
             imgRele2.setImageResource(R.drawable.ic_connected_icon_vector);
+            cvPlug.setCardBackgroundColor(Color.parseColor("#baffc9"));
+            txvRele2Name.setTextColor(Color.WHITE);
         }
-        else{
+        else {
             imgRele2.setImageResource(R.drawable.ic_disconnected_icon_vector);
+            cvPlug.setCardBackgroundColor(null);
+            txvRele2Name.setTextColor(Color.BLACK);
         }
 
         // TEMPERATURA
