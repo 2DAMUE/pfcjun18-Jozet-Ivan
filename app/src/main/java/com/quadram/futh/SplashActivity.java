@@ -25,7 +25,8 @@ public class SplashActivity extends AppCompatActivity implements AnimationListen
         gifSplash = findViewById(R.id.gifSplash);
         gifDrawable = (GifDrawable) gifSplash.getDrawable();
         gifDrawable.addAnimationListener(this);  // Se añade un escuchado al gif para saber cuando se ejecuta entero
-        gifDrawable.reset();  // Se inicia el gif
+        gifDrawable.stop();
+        new Handler().postDelayed(() -> gifDrawable.start(), 50);  // Se inicia el gif con un delay
     }
 
     @Override

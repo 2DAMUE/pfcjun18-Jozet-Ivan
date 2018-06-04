@@ -87,17 +87,17 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == SIGN_IN_CODE){
+        if (requestCode == SIGN_IN_CODE) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
-        if(result.isSuccess()){
+        if (result.isSuccess()) {
             firebaseAuthWithGoogle(result.getSignInAccount());
         }
-        else{
+        else {
             Toast.makeText(this,"No se ha podido iniciar sesión",Toast.LENGTH_SHORT).show();
         }
     }
@@ -105,7 +105,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void firebaseAuthWithGoogle(GoogleSignInAccount signInAccount) {
         AuthCredential credential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(),null);
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, task -> {
-            if(!task.isSuccessful()){
+            if (!task.isSuccessful()) {
                 Toast.makeText(getApplicationContext(),R.string.not_firebase_auth, Toast.LENGTH_SHORT).show();
             }
         });
@@ -123,7 +123,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onStop() {
         super.onStop();
 
-        if(firebaseAuthListener != null){
+        if (firebaseAuthListener != null) {
             firebaseAuth.removeAuthStateListener(firebaseAuthListener);
         }
     }

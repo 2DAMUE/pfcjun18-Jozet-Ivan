@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity
 
         fabAddDevices.setOnClickListener(view -> addDevices());
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         //Al abrir la app, creamos un submenu, que será el que contenga los item de los dispositivos
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity
 
     private void goLoginActivity() {
         Intent i = new Intent(this,LoginActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
     }
 
@@ -258,10 +258,10 @@ public class MainActivity extends AppCompatActivity
             firebaseAuth.signOut();
             stopService(new Intent(getApplicationContext(), ServiceListener.class));  // Se detiene el listener de Firebase a la vez que se cierra sesion
             Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(status -> {
-                if(status.isSuccess()){
+                if (status.isSuccess()) {
                     goLoginActivity();
                 }
-                else{
+                else {
                     Toast.makeText(getApplicationContext(), R.string.not_close_session, Toast.LENGTH_SHORT).show();
                 }
             });
@@ -282,7 +282,7 @@ public class MainActivity extends AppCompatActivity
             mBound = false;
         }
 
-        if(firebaseAuthListener != null){
+        if (firebaseAuthListener != null) {
             firebaseAuth.removeAuthStateListener(firebaseAuthListener);
         }
     }
