@@ -88,11 +88,6 @@ public class NotificationService extends IntentService {
                         .setLatestTimestamp(timestamp)
                         .setReadPendingIntent(readPendingIntent)
                         .setReplyAction(replyIntent, remoteInput);
-
-        // Note: Add messages from oldest to newest to the UnreadConversation.Builder.
-        // Since we are sending a single message here we simply add the message.
-        // In a real world application there could be multiple unread messages which
-        // should be ordered and added from oldest to newest.
         unreadConversationBuilder.addMessage(message);
         /// End create UnreadConversation
 
@@ -124,6 +119,7 @@ public class NotificationService extends IntentService {
                         .setContentTitle(sender)
                         .setContentText(message)
                         .setContentIntent(readPendingIntent)
+                        //.extend(new NotificationCompat.WearableExtender().addAction(replyAction))  // TODO: Android Wear compatibility
                         /// TODO: Extend the notification with CarExtender.
                         .extend(new NotificationCompat.CarExtender()
                                 .setUnreadConversation(unreadConversationBuilder.build()));
