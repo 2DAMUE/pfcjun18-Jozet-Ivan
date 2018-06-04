@@ -6,7 +6,11 @@ public class Constantes {
     public static final String REPLY_ACTION = "com.quadram.futh.ACTION_MESSAGE_REPLY";
     public static final String NOTIFICATION_ID_STRING = "notification_id";
     public static final String VOICE_REPLY = "voice_reply";
-    public static final int NOTIFICATION_ID_INT = 100;
+    public static final int CHANNEL_GAS_ID = 100;
+    public static final int CHANNEL_HUMIDITY_ID = 200;
+    public static final int CHANNEL_LIGHT_ID = 300;
+    public static final int CHANNEL_PLUG_ID = 400;
+    public static final int CHANNEL_TEMPERATURE_ID = 500;
     public static final String CHANNEL_GAS = "Gas";
     public static final String CHANNEL_HUMIDITY = "Humidity";
     public static final String CHANNEL_LIGHT = "Light";

@@ -35,9 +35,10 @@ public class MessageReplyReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (Constantes.REPLY_ACTION.equals(intent.getAction())) {
             CharSequence message = getMessageText(intent);
-            String channel = intent.getStringExtra("channel");
+            String channel = intent.getStringExtra("channel"); // Se obtiene el canal de la notificacion en forma de string
+            int channelId = intent.getIntExtra("channelId", 0);  // Se obtiene el canal de la notificacion en forma de int
 
-            processReply(context, channel, message);  // Se procesa el tipo de notificacion y la respuesta obtenida
+            processReply(context, channelId, channel, message);  // Se procesa el tipo de notificacion y la respuesta obtenida
         }
     }
 
@@ -49,7 +50,7 @@ public class MessageReplyReceiver extends BroadcastReceiver {
         return "";
     }
 
-    private void processReply(final Context context, String channel, CharSequence message) {
+    private void processReply(final Context context, int channelId, String channel, CharSequence message) {
         final DatabaseReference mReference = FirebaseDatabase.getInstance().getReference("devices/0x00000001/");
 
         if (channel.equalsIgnoreCase(Constantes.CHANNEL_LIGHT)) {  // Si la notificacion es de luz
@@ -81,7 +82,7 @@ public class MessageReplyReceiver extends BroadcastReceiver {
                         int risk = Integer.parseInt(snapshot.getValue().toString());  // Se obtiene el valor solicitado
 
                         // Mostramos una nueva notificacion con los datos solicitados
-                        new NotificationHelper(context).showNotification(Constantes.CHANNEL_GAS, "El riesgo de gas es de nivel "+risk, Constantes.CHANNEL_GAS, R.mipmap.gas_risk_one_icon, false);
+                        new NotificationHelper(context).showNotification(Constantes.CHANNEL_GAS_ID, Constantes.CHANNEL_GAS, "El riesgo de gas es de nivel "+risk, Constantes.CHANNEL_GAS, R.mipmap.gas_risk_one_icon, false);
 
                         mReference.removeEventListener(this);  // Se elimina el listener una vez se recupero el dato correspondiente
                     }
@@ -99,7 +100,7 @@ public class MessageReplyReceiver extends BroadcastReceiver {
                         float value = Float.parseFloat(snapshot.getValue().toString());  // Se obtiene el valor solicitado
 
                         // Mostramos una nueva notificacion con los datos solicitados
-                        new NotificationHelper(context).showNotification(Constantes.CHANNEL_HUMIDITY, "La humedad es del "+value+" por ciento", Constantes.CHANNEL_HUMIDITY, R.mipmap.humidity_notification_icon, false);
+                        new NotificationHelper(context).showNotification(Constantes.CHANNEL_HUMIDITY_ID, Constantes.CHANNEL_HUMIDITY, "La humedad es del "+value+" por ciento", Constantes.CHANNEL_HUMIDITY, R.mipmap.humidity_notification_icon, false);
 
                         mReference.removeEventListener(this);  // Se elimina el listener una vez se recupero el dato correspondiente
                     }
@@ -117,7 +118,7 @@ public class MessageReplyReceiver extends BroadcastReceiver {
                         float value = Float.parseFloat(snapshot.getValue().toString());  // Se obtiene el valor solicitado
 
                         // Mostramos una nueva notificacion con los datos solicitados
-                        new NotificationHelper(context).showNotification(Constantes.CHANNEL_TEMPERATURE, "La temperatura es de "+value+" grados", Constantes.CHANNEL_TEMPERATURE, R.mipmap.notification_temperature_icon, false);
+                        new NotificationHelper(context).showNotification(Constantes.CHANNEL_TEMPERATURE_ID, Constantes.CHANNEL_TEMPERATURE, "La temperatura es de "+value+" grados", Constantes.CHANNEL_TEMPERATURE, R.mipmap.notification_temperature_icon, false);
 
                         mReference.removeEventListener(this);  // Se elimina el listener una vez se recupero el dato correspondiente
                     }
@@ -128,6 +129,6 @@ public class MessageReplyReceiver extends BroadcastReceiver {
         }
         //Toast.makeText(context, "Reply: " + message, Toast.LENGTH_LONG).show();
         Log.d("REPLY", message.toString());
-        NotificationManagerCompat.from(context).cancel(Constantes.NOTIFICATION_ID_INT);  // Se cancela la notificacion una vez ha sido respondida
+        NotificationManagerCompat.from(context).cancel(channelId);  // Se cancela la notificacion una vez ha sido respondida
     }
 }

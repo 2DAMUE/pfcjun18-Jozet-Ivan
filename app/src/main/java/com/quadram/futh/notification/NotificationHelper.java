@@ -15,8 +15,9 @@ public class NotificationHelper extends ContextWrapper {
         notification = new Intent(getApplicationContext(), NotificationService.class);
     }
 
-    public void showNotification(String title, String text, String channel, int icon, boolean hasReply) {
+    public void showNotification(int channelId, String title, String text, String channel, int icon, boolean hasReply) {
         notification.setAction(Constantes.SHOW_NOTIFICATION);
+        notification.putExtra("channelId", channelId);
         notification.putExtra("title", title);
         notification.putExtra("text", text);
         notification.putExtra("channel", channel);
