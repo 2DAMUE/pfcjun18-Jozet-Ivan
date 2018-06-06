@@ -1,6 +1,8 @@
 package com.quadram.futh;
 
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -10,8 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +29,11 @@ import com.quadram.futh.model.Humidity;
 import com.quadram.futh.model.Relay;
 import com.quadram.futh.model.Temperature;
 
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
+
+import static android.support.constraint.Constraints.TAG;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,6 +45,8 @@ public class DeviceFragment extends Fragment {
     private Device device;
 
     private CardView cvGas, cvHumidity, cvLight, cvPlug, cvTemperature;
+
+    private Calendar date;
 
     private ImageView imgGas, imgHumidity, imgRele1, imgRele2, imgTemperature;
     private TextView  txvGasName, txvGasRisk;
@@ -80,23 +91,6 @@ public class DeviceFragment extends Fragment {
         device = new Device();
         recogerDatosFirebase();
 
-        // Color de los iconos en blanco
-        imgGas.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-        imgHumidity.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-        imgRele1.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-        imgRele2.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-        imgTemperature.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-
-        // Color de los textview en blanco
-        txvGasName.setTextColor(Color.WHITE);
-        txvGasRisk.setTextColor(Color.WHITE);
-        txvHumidityName.setTextColor(Color.WHITE);
-        txvHumidityValue.setTextColor(Color.WHITE);
-        txvRele1Name.setTextColor(Color.WHITE);
-        txvRele2Name.setTextColor(Color.WHITE);
-        txvTemperatureName.setTextColor(Color.WHITE);
-        txvTemperatureValue.setTextColor(Color.WHITE);
-
         // Recuperar los cardview
         cvGas = v.findViewById(R.id.cardViewGas);
         cvHumidity = v.findViewById(R.id.cardViewHumidity);
@@ -115,7 +109,62 @@ public class DeviceFragment extends Fragment {
         cvPlug.setOnClickListener((view) -> onClickPlug());
         cvTemperature.setOnClickListener((view) -> onClickTemperature());
 
+        cvLight.setOnLongClickListener((view) -> showLightTimerPicker());
+        cvPlug.setOnLongClickListener((view) -> showPlugTimerPicker());
+
         return v;
+    }
+
+    public boolean showLightTimerPicker() {
+        final Calendar currentDate = Calendar.getInstance();
+        date = Calendar.getInstance();
+        new DatePickerDialog(getContext(), (view, year, monthOfYear, dayOfMonth) -> {
+            date.set(year, monthOfYear, dayOfMonth);
+            new TimePickerDialog(getContext(), (view1, hourOfDay, minute) -> {
+                date.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                date.set(Calendar.MINUTE, minute);
+                date.set(Calendar.SECOND, 0);
+
+                long futureTime = TimeUnit.MILLISECONDS.toSeconds(date.getTimeInMillis());
+                long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+                long leftTime = futureTime-currentTime;
+                Log.d("ONLONGCLICK", "TIEMPO RESTANTE: " + leftTime + " SEGUNDOS");
+
+                if (leftTime > 0) {  // Si se ha seleccionado una fecha posterior a la actual
+                    refDevice.child("rele1").child("timer").setValue(leftTime);
+                }
+                else {  // Si se ha seleccionado una fecha anterior a la actual
+                    Toast.makeText(getContext(), "No se puede establecer un temporizador para el pasado", Toast.LENGTH_LONG).show();
+                }
+            }, currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), true).show();
+        }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DATE)).show();
+        return true;
+    }
+
+    public boolean showPlugTimerPicker() {
+        final Calendar currentDate = Calendar.getInstance();
+        date = Calendar.getInstance();
+        new DatePickerDialog(getContext(), (view, year, monthOfYear, dayOfMonth) -> {
+            date.set(year, monthOfYear, dayOfMonth);
+            new TimePickerDialog(getContext(), (view1, hourOfDay, minute) -> {
+                date.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                date.set(Calendar.MINUTE, minute);
+                date.set(Calendar.SECOND, 0);
+
+                long futureTime = TimeUnit.MILLISECONDS.toSeconds(date.getTimeInMillis());
+                long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+                long leftTime = futureTime-currentTime;
+                Log.d("ONLONGCLICK", "TIEMPO RESTANTE: " + leftTime + " SEGUNDOS");
+
+                if (leftTime > 0) {  // Si se ha seleccionado una fecha posterior a la actual
+                    refDevice.child("rele2").child("timer").setValue(leftTime);
+                }
+                else {  // Si se ha seleccionado una fecha anterior a la actual
+                    Toast.makeText(getContext(), "No se puede establecer un temporizador para el pasado", Toast.LENGTH_LONG).show();
+                }
+            }, currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), true).show();
+        }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DATE)).show();
+        return true;
     }
 
     private void onClickGas() {
@@ -194,12 +243,10 @@ public class DeviceFragment extends Fragment {
         if(device.getLight().getState().equals("on")){
             imgRele1.setImageResource(R.drawable.ic_light_on_icon_vector);
             cvLight.setCardBackgroundColor(Color.parseColor("#ffffba"));
-            txvRele1Name.setTextColor(Color.WHITE);
         }
         else {
             imgRele1.setImageResource(R.drawable.ic_light_off_icon_vector);
             cvLight.setCardBackgroundColor(null);
-            txvRele1Name.setTextColor(Color.BLACK);
         }
 
         // ENCHUFE
@@ -207,12 +254,10 @@ public class DeviceFragment extends Fragment {
         if(device.getPlug().getState().equals("on")){
             imgRele2.setImageResource(R.drawable.ic_connected_icon_vector);
             cvPlug.setCardBackgroundColor(Color.parseColor("#baffc9"));
-            txvRele2Name.setTextColor(Color.WHITE);
         }
         else {
             imgRele2.setImageResource(R.drawable.ic_disconnected_icon_vector);
             cvPlug.setCardBackgroundColor(null);
-            txvRele2Name.setTextColor(Color.BLACK);
         }
 
         // TEMPERATURA
