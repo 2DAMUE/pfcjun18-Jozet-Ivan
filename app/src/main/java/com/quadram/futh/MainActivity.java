@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -28,12 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -47,7 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, com.aitorvs.android.fingerlock.FingerprintDialog.Callback {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
@@ -307,12 +300,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     for (int i = 0; i < devices.size(); i++) {
                         final int finalI = i;
                         mDevices.add(devices.get(i)).setIcon(R.drawable.ic_arduino).setOnMenuItemClickListener(menuItem -> {
-                            // create and show the fingerprint dialog using the Builder
-                            new com.aitorvs.android.fingerlock.FingerprintDialog.Builder()
-                                    .with(MainActivity.this)    // context, must call
-                                    .setKeyName("FINGERPRINT")       // String key name, must call
-                                    .setRequestCode(69)         // request code identifier, must call
-                                    .show();                    // show the dialog
                             openFragmentDevice(devices.get(finalI));
                             return onOptionsItemSelected(menuItem);
                         });
@@ -338,35 +325,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
         return null;
-    }
-
-    @Override
-    public void onFingerprintDialogAuthenticated() {
-        Toast.makeText(this, "Autenticación correcta", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onFingerprintDialogVerifyPassword(final com.aitorvs.android.fingerlock.FingerprintDialog dialog, final String password) {
-        // Password verification has been requested. Use this method to verify the `password` passed
-        // as parameter against your backend
-
-        // Simulate exchange with backend
-        new android.os.Handler().postDelayed(()-> dialog.notifyPasswordValidation(password.equals("aitorvs")), 1500);
-    }
-
-    @Override
-    public void onFingerprintDialogStageUpdated(com.aitorvs.android.fingerlock.FingerprintDialog dialog, com.aitorvs.android.fingerlock.FingerprintDialog.Stage stage) {
-        Log.d("FINGERPRINT", "Dialog stage: " + stage.name());
-    }
-
-    public enum Stage {
-        FINGERPRINT,        // fingerprint authentication allowed
-        KEY_INVALIDATED,    // key invalidated, password to be required
-        PASSWORD            // password authentication selected by the user
-    }
-
-    @Override
-    public void onFingerprintDialogCancelled() {
-        Toast.makeText(this, "Diálogo cancelado", Toast.LENGTH_SHORT).show();
     }
 }
