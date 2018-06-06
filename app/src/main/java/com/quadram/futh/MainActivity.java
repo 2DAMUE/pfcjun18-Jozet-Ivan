@@ -6,7 +6,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
@@ -42,13 +41,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.aflak.libraries.callback.FailAuthCounterCallback;
 import me.aflak.libraries.callback.FingerprintDialogCallback;
 import me.aflak.libraries.dialog.DialogAnimation;
 import me.aflak.libraries.dialog.FingerprintDialog;
-import me.aflak.libraries.dialog.PasswordDialog;
-import me.aflak.libraries.utils.FingerprintToken;
+import me.aflak.libraries.view.Fingerprint;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FingerprintDialogCallback {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
@@ -75,9 +74,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startService(i);
         }
 
-        devicesMap = new HashMap<>();
+        devicesMap = new HashMap<>();  // Se inicializa vacio el Map de dispositivos
 
-        mBound = false;
+        mBound = false;  // Por defecto se indica que no está enlazado al servicio de notificaciones
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -360,34 +359,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void showFingerPrintDialog(String device) {
         FingerprintDialog.initialize(this)
-                .title("Autenticación")  // Titulo del dialogo
-                .message("Huella dactilar requerida")  // Subtitulo del dialogo
-                .enterAnimation(DialogAnimation.Enter.LEFT)  // Animacion de aparicion
-                .exitAnimation(DialogAnimation.Exit.RIGHT)  // Animacion de desaparicion
-                .circleSuccessColor(android.R.color.holo_green_light)  // Color icono autenticacion exitosa
-                .circleErrorColor(android.R.color.holo_red_light)  // Color icono fallo autenticacion
-                .circleScanningColor(R.color.colorPrimary)  // Color icono huella dactilar
-                .callback(new FingerprintDialogCallback() {
-                    @Override
-                    public void onAuthenticationSucceeded() {
-                        openFragmentDevice(device);  // Se abre el fragment seleccionado
-                    }
+            .title("Autenticación")  // Titulo del dialogo
+            .message("Huella dactilar requerida")  // Subtitulo del dialogo
+            .enterAnimation(DialogAnimation.Enter.LEFT)  // Animacion de aparicion
+            .exitAnimation(DialogAnimation.Exit.RIGHT)  // Animacion de desaparicion
+            .circleSuccessColor(android.R.color.holo_green_light)  // Color del fondo del icono de autenticacion exitosa
+            .statusSuccessColor(android.R.color.holo_green_dark)  // Color del texto de autenticacion exitosa
+            .fingerprintSuccessColor(android.R.color.white)  // Color del icono de autenticacion exitosa
+            .circleErrorColor(android.R.color.holo_red_light)  // Color del fondo del icono de autenticacion fallida
+            .statusErrorColor(android.R.color.holo_red_dark)  // Color del texto de autenticacion fallida
+            .fingerprintErrorColor(android.R.color.white)  // Color del icono de autenticacion fallida
+            .circleScanningColor(R.color.colorPrimary)  // Color del fondo del icono de autenticacion con huella
+            .statusScanningColor(R.color.colorPrimaryDark)  // Color del texto de autenticacion con huella
+            .fingerprintScanningColor(android.R.color.white)  // Color del icono de autenticacion con huella
+            .cancelOnPressBack(true)  // Se permite que se cancele el dialogo pulsando el boton de atras
+            .cancelOnTouchOutside(true)  // Se permite que se cancele el dialogo pulsando fuera de el
+            .tryLimit(1, () -> Toast.makeText(getApplicationContext(), "Has alcanzado el limite máximo de intentos", Toast.LENGTH_LONG).show())
+            .callback(new FingerprintDialogCallback() {
+                @Override
+                public void onAuthenticationSucceeded() {
+                    openFragmentDevice(device);  // Se abre el fragment seleccionado
+                }
 
-                    @Override
-                    public void onAuthenticationCancel() {
-                        Toast.makeText(getApplicationContext(), "Se ha cancelado la operación", Toast.LENGTH_LONG).show();
-                    }
-                })
-                .show();
-    }
-
-    @Override
-    public void onAuthenticationSucceeded() {
-
-    }
-
-    @Override
-    public void onAuthenticationCancel() {
-
+                @Override
+                public void onAuthenticationCancel() {
+                    Toast.makeText(getApplicationContext(), "Se ha cancelado la operación", Toast.LENGTH_LONG).show();
+                }
+            })
+            .show();
     }
 }
