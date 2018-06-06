@@ -6,12 +6,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -28,12 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -47,7 +42,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import me.aflak.libraries.callback.FingerprintDialogCallback;
+import me.aflak.libraries.dialog.DialogAnimation;
+import me.aflak.libraries.dialog.FingerprintDialog;
+import me.aflak.libraries.dialog.PasswordDialog;
+import me.aflak.libraries.utils.FingerprintToken;
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FingerprintDialogCallback {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
@@ -73,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent i = new Intent(this, ServiceListener.class);
             startService(i);
         }
+
+        devicesMap = new HashMap<>();
 
         mBound = false;
 
@@ -175,7 +178,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void addDeviceFirebase(String idDevice, AlertDialog dialog) {
         mDevices.add(R.id.gDevices,101,0,idDevice).setIcon(R.drawable.ic_arduino).setOnMenuItemClickListener(menuItem -> {
-            openFragmentDevice(idDevice);
+            FingerprintManagerCompat fingerprintManagerCompat = FingerprintManagerCompat.from(getApplicationContext());
+            if (!fingerprintManagerCompat.isHardwareDetected()) {  // El dispositivo no soporta la autenticacion con huella dactilar
+                Toast.makeText(getApplicationContext(), "El dispositivo no es compatible", Toast.LENGTH_LONG).show();
+                openFragmentDevice(idDevice);  // Se abre el fragment seleccionado
+            }
+            else if (!fingerprintManagerCompat.hasEnrolledFingerprints()) {  // El usuario no tiene huellas dactilares guardadas para autenticarse
+                Toast.makeText(getApplicationContext(), "No se han registrado huellas dactilares", Toast.LENGTH_LONG).show();
+            }
+            else {  // Disponible para autenticacion con huella dactilar
+                showFingerPrintDialog(idDevice);  // Se muestra el dialogo para autenticarse con huella dactilar
+            }
             return  onOptionsItemSelected(menuItem);
         });
         DatabaseReference refRaiz = FirebaseDatabase.getInstance().getReference();
@@ -307,7 +320,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     for (int i = 0; i < devices.size(); i++) {
                         final int finalI = i;
                         mDevices.add(devices.get(i)).setIcon(R.drawable.ic_arduino).setOnMenuItemClickListener(menuItem -> {
-                            openFragmentDevice(devices.get(finalI));
+                            String device = devices.get(finalI);
+                            FingerprintManagerCompat fingerprintManagerCompat = FingerprintManagerCompat.from(getApplicationContext());
+                            if (!fingerprintManagerCompat.isHardwareDetected()) {  // El dispositivo no soporta la autenticacion con huella dactilar
+                                Toast.makeText(getApplicationContext(), "El dispositivo no es compatible", Toast.LENGTH_LONG).show();
+                                openFragmentDevice(device);  // Se abre el fragment seleccionado
+                            }
+                            else if (!fingerprintManagerCompat.hasEnrolledFingerprints()) {  // El usuario no tiene huellas dactilares guardadas para autenticarse
+                                Toast.makeText(getApplicationContext(), "No se han registrado huellas dactilares", Toast.LENGTH_LONG).show();
+                            }
+                            else {  // Disponible para autenticacion con huella dactilar
+                                showFingerPrintDialog(device);  // Se muestra el dialogo para autenticarse con huella dactilar
+                            }
                             return onOptionsItemSelected(menuItem);
                         });
                         Log.d("DEVICE", devices.get(i));
@@ -332,5 +356,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
         return null;
+    }
+
+    private void showFingerPrintDialog(String device) {
+        FingerprintDialog.initialize(this)
+                .title("Autenticación")  // Titulo del dialogo
+                .message("Huella dactilar requerida")  // Subtitulo del dialogo
+                .enterAnimation(DialogAnimation.Enter.LEFT)  // Animacion de aparicion
+                .exitAnimation(DialogAnimation.Exit.RIGHT)  // Animacion de desaparicion
+                .circleSuccessColor(android.R.color.holo_green_light)  // Color icono autenticacion exitosa
+                .circleErrorColor(android.R.color.holo_red_light)  // Color icono fallo autenticacion
+                .circleScanningColor(R.color.colorPrimary)  // Color icono huella dactilar
+                .callback(new FingerprintDialogCallback() {
+                    @Override
+                    public void onAuthenticationSucceeded() {
+                        openFragmentDevice(device);  // Se abre el fragment seleccionado
+                    }
+
+                    @Override
+                    public void onAuthenticationCancel() {
+                        Toast.makeText(getApplicationContext(), "Se ha cancelado la operación", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    public void onAuthenticationSucceeded() {
+
+    }
+
+    @Override
+    public void onAuthenticationCancel() {
+
     }
 }
