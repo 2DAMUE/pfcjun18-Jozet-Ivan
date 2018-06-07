@@ -2,6 +2,7 @@ package com.quadram.futh;
 
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -42,6 +43,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.aflak.libraries.callback.FailAuthCounterCallback;
+import me.aflak.libraries.callback.FingerprintCallback;
 import me.aflak.libraries.callback.FingerprintDialogCallback;
 import me.aflak.libraries.dialog.DialogAnimation;
 import me.aflak.libraries.dialog.FingerprintDialog;
@@ -62,8 +64,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean mBound;
     private Map<String, String> devicesMap;
 
-    ImageView imgGoogle;
-    TextView txvNameGoogle, txvGmail;
+    private ImageView imgGoogle;
+    private TextView txvNameGoogle, txvGmail;
+    private DeviceFragment df;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         devicesMap = new HashMap<>();  // Se inicializa vacio el Map de dispositivos
 
         mBound = false;  // Por defecto se indica que no está enlazado al servicio de notificaciones
+
+        df = new DeviceFragment();  // Se crea una instancia del fragment
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -200,7 +206,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Bundle args = new Bundle();
         idDevice = getKeyFromValue(devicesMap, idDevice).toString();
         args.putString("idDevice", idDevice);
-        DeviceFragment df = new DeviceFragment();
         df.setArguments(args);
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction().replace(R.id.containerFragment, df).commit();
@@ -374,7 +379,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             .fingerprintScanningColor(android.R.color.white)  // Color del icono de autenticacion con huella
             .cancelOnPressBack(true)  // Se permite que se cancele el dialogo pulsando el boton de atras
             .cancelOnTouchOutside(true)  // Se permite que se cancele el dialogo pulsando fuera de el
-            .tryLimit(1, () -> Toast.makeText(getApplicationContext(), "Has alcanzado el limite máximo de intentos", Toast.LENGTH_LONG).show())
+            .tryLimit(3, (fingerprintDialog) -> {  // Se establece el numero de intentos
+                if (df.isVisible()) {
+                    FragmentManager fm = getSupportFragmentManager();
+                    fm.beginTransaction().hide(df).commit();
+                }
+                fingerprintDialog.dismiss();  // Se cierra el dialogo cuando se alcanza el limite
+                Toast.makeText(getApplicationContext(), "Has alcanzado el limite máximo de intentos", Toast.LENGTH_LONG).show();
+            })
             .callback(new FingerprintDialogCallback() {
                 @Override
                 public void onAuthenticationSucceeded() {
