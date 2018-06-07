@@ -1,32 +1,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context="com.quadram.futh.DeviceFragment"
-    android:padding="10dp">
+    android:padding="10dp"
+    tools:context="com.quadram.futh.DeviceFragment">
 
     <LinearLayout
-        android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipToPadding="false"
         android:gravity="center"
         android:orientation="horizontal">
-        
+
         <android.support.v7.widget.CardView
             android:id="@+id/cardViewGas"
             android:layout_width="160dp"
             android:layout_height="130dp"
             android:layout_margin="10dp"
             app:cardCornerRadius="18dp">
-            
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center">
-                
+                android:gravity="center"
+                android:orientation="vertical">
+
                 <ImageView
                     android:id="@+id/idGasImg"
                     android:layout_width="60dp"
@@ -47,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="Luz" />
-                
+
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
@@ -61,8 +61,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/idHumidityImg"
@@ -90,9 +90,9 @@
     </LinearLayout>
 
     <LinearLayout
-        android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipToPadding="false"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -106,21 +106,22 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/idRele1Img"
                     android:layout_width="60dp"
                     android:layout_height="60dp" />
+
                 <TextView
                     android:id="@+id/idRele1Name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
                     android:layout_marginTop="5dp"
-                    android:text="Luz"/>
+                    android:text="Luz"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -135,30 +136,31 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/idRele2Img"
                     android:layout_width="60dp"
                     android:layout_height="60dp" />
+
                 <TextView
                     android:id="@+id/idRele2Name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
                     android:layout_marginTop="5dp"
-                    android:text="Luz"/>
+                    android:text="Luz"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
     </LinearLayout>
 
     <LinearLayout
-        android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipToPadding="false"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -172,27 +174,29 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/idTemperatureImg"
                     android:layout_width="60dp"
                     android:layout_height="60dp" />
+
                 <TextView
                     android:id="@+id/idTemperatureName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
                     android:layout_marginTop="5dp"
-                    android:text="Luz"/>
+                    android:text="Luz"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/idTemperatureValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Luz"/>
+                    android:text="Luz" />
 
             </LinearLayout>
         </android.support.v7.widget.CardView>

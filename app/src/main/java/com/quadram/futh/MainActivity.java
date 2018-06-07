@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private ImageView imgGoogle;
     private TextView txvNameGoogle, txvGmail;
+    private DeviceFragment df;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,11 +82,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mBound = false;  // Por defecto se indica que no está enlazado al servicio de notificaciones
 
+        df = new DeviceFragment();  // Se crea una instancia del fragment
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.setLongClickable(true);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -136,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .into(imgGoogle);
     }
 
+
     private void addDevices() {
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
@@ -179,15 +182,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void addDeviceFirebase(String idDevice, AlertDialog dialog) {
-        mDevices.add(R.id.gDevices,101,0,idDevice).setIcon(R.drawable.ic_arduino).setOnMenuItemClickListener(mItem -> {
-            if (!FingerprintDialog.isAvailable(getApplicationContext())) {
-                Toast.makeText(getApplicationContext(), "El dispositivo no es compatible o no se han registrado huellas dactilares", Toast.LENGTH_LONG).show();
+        mDevices.add(R.id.gDevices,101,0,idDevice).setIcon(R.drawable.ic_arduino).setOnMenuItemClickListener(menuItem -> {
+            FingerprintManagerCompat fingerprintManagerCompat = FingerprintManagerCompat.from(getApplicationContext());
+            if (!fingerprintManagerCompat.isHardwareDetected()) {  // El dispositivo no soporta la autenticacion con huella dactilar
+                Toast.makeText(getApplicationContext(), "El dispositivo no es compatible", Toast.LENGTH_LONG).show();
                 openFragmentDevice(idDevice);  // Se abre el fragment seleccionado
+            }
+            else if (!fingerprintManagerCompat.hasEnrolledFingerprints()) {  // El usuario no tiene huellas dactilares guardadas para autenticarse
+                Toast.makeText(getApplicationContext(), "No se han registrado huellas dactilares", Toast.LENGTH_LONG).show();
             }
             else {  // Disponible para autenticacion con huella dactilar
                 showFingerPrintDialog(idDevice);  // Se muestra el dialogo para autenticarse con huella dactilar
             }
-            return onOptionsItemSelected(mItem);
+            return  onOptionsItemSelected(menuItem);
         });
         DatabaseReference refRaiz = FirebaseDatabase.getInstance().getReference();
         DatabaseReference refUsers = refRaiz.child("users").child(firebaseAuth.getCurrentUser().getUid());
@@ -199,11 +206,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Bundle args = new Bundle();
         idDevice = getKeyFromValue(devicesMap, idDevice).toString();
         args.putString("idDevice", idDevice);
-        DeviceFragment df = new DeviceFragment();
         df.setArguments(args);
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction().replace(R.id.containerFragment, df).commit();
-        fm.beginTransaction().show(df).commit();
     }
 
 
@@ -242,10 +247,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            SettingsFragment sf = new SettingsFragment();
-            FragmentManager fm = getSupportFragmentManager();
-            fm.beginTransaction().replace(R.id.containerFragment, sf).commit();
-            fm.beginTransaction().show(sf).commit();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -323,9 +325,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         final int finalI = i;
                         mDevices.add(devices.get(i)).setIcon(R.drawable.ic_arduino).setOnMenuItemClickListener(menuItem -> {
                             String device = devices.get(finalI);
-                            if (!FingerprintDialog.isAvailable(getApplicationContext())) {
-                                Toast.makeText(getApplicationContext(), "El dispositivo no es compatible o no se han registrado huellas dactilares", Toast.LENGTH_LONG).show();
+                            FingerprintManagerCompat fingerprintManagerCompat = FingerprintManagerCompat.from(getApplicationContext());
+                            if (!fingerprintManagerCompat.isHardwareDetected()) {  // El dispositivo no soporta la autenticacion con huella dactilar
+                                Toast.makeText(getApplicationContext(), "El dispositivo no es compatible", Toast.LENGTH_LONG).show();
                                 openFragmentDevice(device);  // Se abre el fragment seleccionado
+                            }
+                            else if (!fingerprintManagerCompat.hasEnrolledFingerprints()) {  // El usuario no tiene huellas dactilares guardadas para autenticarse
+                                Toast.makeText(getApplicationContext(), "No se han registrado huellas dactilares", Toast.LENGTH_LONG).show();
                             }
                             else {  // Disponible para autenticacion con huella dactilar
                                 showFingerPrintDialog(device);  // Se muestra el dialogo para autenticarse con huella dactilar
@@ -374,8 +380,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             .cancelOnPressBack(true)  // Se permite que se cancele el dialogo pulsando el boton de atras
             .cancelOnTouchOutside(true)  // Se permite que se cancele el dialogo pulsando fuera de el
             .tryLimit(3, (fingerprintDialog) -> {  // Se establece el numero de intentos
-                FragmentManager fm = getSupportFragmentManager();
-                fm.beginTransaction().replace(R.id.containerFragment, null).commit();
+                if (df.isVisible()) {
+                    FragmentManager fm = getSupportFragmentManager();
+                    fm.beginTransaction().hide(df).commit();
+                }
                 fingerprintDialog.dismiss();  // Se cierra el dialogo cuando se alcanza el limite
                 Toast.makeText(getApplicationContext(), "Has alcanzado el limite máximo de intentos", Toast.LENGTH_LONG).show();
             })
