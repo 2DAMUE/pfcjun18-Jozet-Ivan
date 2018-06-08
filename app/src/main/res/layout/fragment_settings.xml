@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="32dp"
+        android:backgroundTint="@color/colorPrimary"
         android:fontFamily="sans-serif"
         android:text="@string/switch_fingerprint"
         android:textOff="@string/switch_fingerprint_off"

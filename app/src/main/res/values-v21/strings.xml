@@ -7,4 +7,6 @@
 
     <string name="txvRenameDevice">RENOMBRAR DISPOSITIVO</string>
     <string name="btnRenameDevice">RENOMBRAR</string>
+    <string name="textWelcome">¡BIENVENIDO A FUTH!</string>
+    <string name="textDescription">Para comenzar a tener el control, añade tu primer dispositivo o accede a el.</string>
 </resources>

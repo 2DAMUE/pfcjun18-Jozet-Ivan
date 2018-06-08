@@ -21,4 +21,6 @@
     <string name="switch_fingerprint">Protección con huella dactilar</string>
     <string name="switch_fingerprint_on">Protección con huella dactilar activada</string>
     <string name="switch_fingerprint_off">Protección con huella dactilar desactivada</string>
+    <string name="textWelcome">¡BIENVENIDO A FUTH!</string>
+    <string name="textDescription">Para comenzar a tener el control, añade tu primer dispositivo o accede a el.</string>
 </resources>

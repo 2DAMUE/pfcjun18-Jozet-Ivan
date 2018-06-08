@@ -58,6 +58,8 @@ public class DeviceFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_device, container, false);
         String idDevice = getArguments().getString("idDevice");
 
+        v.setBackgroundResource(R.drawable.home_difuminado);
+
         ref = FirebaseDatabase.getInstance().getReference();
         refDevice = ref.child("devices").child(idDevice);
 

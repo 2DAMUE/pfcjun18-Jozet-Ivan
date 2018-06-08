@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
@@ -150,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         aBuilder.setView(mView);
         final AlertDialog dialog = aBuilder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
 
         btnAddDevice.setOnClickListener(new View.OnClickListener() {
@@ -210,6 +213,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         df.setArguments(args);
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction().replace(R.id.containerFragment, df).commit();
+    }
+
+    private void openFragmentWelcome(){
+        WelcomeFragment dfWelcome = new WelcomeFragment();
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction().replace(R.id.containerFragment,dfWelcome).commit();
     }
 
     private void openFragmentSettings() {
@@ -354,6 +363,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         });
                         Log.d("DEVICE", devices.get(i));
                     }
+                    openFragmentDevice(devices.get(0));
+                }else{
+                    openFragmentWelcome();
                 }
                 reference.removeEventListener(this);
             }
