@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void goLoginActivity() {
         Intent i = new Intent(this, LoginActivity.class);
+        i.putExtra("activity", "mainactivity");
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
     }
@@ -283,7 +284,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_logout) {
             firebaseAuth.signOut();
             stopService(new Intent(getApplicationContext(), ServiceListener.class));  // Se detiene el listener de Firebase a la vez que se cierra sesion
-            finish();
+            goLoginActivity();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

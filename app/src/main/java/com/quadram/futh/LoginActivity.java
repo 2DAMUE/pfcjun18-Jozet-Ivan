@@ -38,7 +38,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        startActivity(new Intent(this, SplashActivity.class));
+        // Solo se inicia el splash cuando se inicia sesion
+        String activityName = getIntent().getStringExtra("activity");
+        if (activityName != null) {
+            if (!activityName.equalsIgnoreCase("mainactivity"))
+                startActivity(new Intent(this, SplashActivity.class));
+        }
+        else {
+            startActivity(new Intent(this, SplashActivity.class));
+        }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -49,7 +57,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
 
         btnGoogle = findViewById(R.id.btnGoogle);
         btnGoogle.setOnClickListener(view -> {
@@ -71,7 +78,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onStart();
         firebaseAuth.addAuthStateListener(firebaseAuthListener);
     }
-
 
     @Override
     public void onSupportActionModeStarted(@NonNull ActionMode mode) {
@@ -117,7 +123,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
     }
-
 
     @Override
     protected void onStop() {
