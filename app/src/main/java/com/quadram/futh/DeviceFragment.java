@@ -4,7 +4,6 @@ package com.quadram.futh;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -12,10 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -32,12 +29,7 @@ import com.quadram.futh.model.Temperature;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
-import static android.support.constraint.Constraints.TAG;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class DeviceFragment extends Fragment {
 
     private DatabaseReference ref, refDevice;

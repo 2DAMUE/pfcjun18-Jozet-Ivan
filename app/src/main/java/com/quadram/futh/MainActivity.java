@@ -2,7 +2,6 @@ package com.quadram.futh;
 
 import android.app.ActivityManager;
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -45,12 +44,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.aflak.libraries.callback.FailAuthCounterCallback;
-import me.aflak.libraries.callback.FingerprintCallback;
 import me.aflak.libraries.callback.FingerprintDialogCallback;
 import me.aflak.libraries.dialog.DialogAnimation;
 import me.aflak.libraries.dialog.FingerprintDialog;
-import me.aflak.libraries.view.Fingerprint;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -344,7 +340,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             checkSharedPreferences();  // Se actualizan las preferencias del usuario
                             if (isFingerprintActivated) {  // Si la proteccion con huella esta activada
                                 if (!FingerprintDialog.isAvailable(getApplicationContext())) {  // Si el dispositivo no soporta la autenticacion con huella o no hay ninguna registrada
-                                    //Toast.makeText(getApplicationContext(), "El dispositivo no soporta la autenticacion con huella dactilar o no hay ninguna registrada", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), "El dispositivo no soporta la autenticacion con huella dactilar o no hay ninguna registrada", Toast.LENGTH_LONG).show();
                                     openFragmentDevice(device);  // Se abre el fragment seleccionado
                                 }
                                 else {  // Si el dispositivo soporta autenticacion con huella
