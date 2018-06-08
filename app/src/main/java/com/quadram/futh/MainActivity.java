@@ -363,8 +363,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         });
                         Log.d("DEVICE", devices.get(i));
                     }
-                    openFragmentDevice(devices.get(0));
-                }else{
+                    // Se abre el primer dispositivo acorde a los ajustes de seguridad que tenga el usuario
+                    if (isFingerprintActivated) {  // Si la proteccion con huella esta activada
+                        if (!FingerprintDialog.isAvailable(getApplicationContext())) {  // Si el dispositivo no soporta la autenticacion con huella o no hay ninguna registrada
+                            Toast.makeText(getApplicationContext(), "El dispositivo no soporta la autenticacion con huella dactilar o no hay ninguna registrada", Toast.LENGTH_LONG).show();
+                            openFragmentDevice(devices.get(0));  // Se abre el fragment seleccionado
+                        }
+                        else {  // Si el dispositivo soporta autenticacion con huella
+                            showFingerPrintDialog(devices.get(0));  // Se muestra el dialogo para autenticarse con huella dactilar
+                        }
+                    }
+                    else {  // No se ha activado la proteccion mediante huella dactilar
+                        openFragmentDevice(devices.get(0));  // Se abre el fragment seleccionado
+                    }
+                }
+                else {
                     openFragmentWelcome();
                 }
                 reference.removeEventListener(this);
@@ -424,20 +437,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void onAuthenticationCancel() {
                     Toast.makeText(getApplicationContext(), "Se ha cancelado la operación", Toast.LENGTH_LONG).show();
+                    removeFragments();
                 }
             })
             .show();
     }
 
     private void removeFragments() {
-        if (getSupportFragmentManager().getFragments() != null && getSupportFragmentManager().getFragments().size() > 0) {
-            for (int i = 0; i < getSupportFragmentManager().getFragments().size(); i++) {
+        if (getSupportFragmentManager().getFragments() != null && getSupportFragmentManager().getFragments().size() > 1) {
+            for (int i = 1; i < getSupportFragmentManager().getFragments().size(); i++) {
                 Fragment mFragment = getSupportFragmentManager().getFragments().get(i);
                 if (mFragment != null) {
                     getSupportFragmentManager().beginTransaction().remove(mFragment).commit();
                 }
             }
         }
+        openFragmentWelcome();
     }
 
     private void checkSharedPreferences() {
