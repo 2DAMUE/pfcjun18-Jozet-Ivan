@@ -17,7 +17,6 @@
     <string name="btnRenameDevice">RENOMBRAR</string>
     <string name="idRenameDevice">NUEVO NOMBRE:</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="switch_fingerprint">Protección con huella dactilar</string>
     <string name="switch_fingerprint_on">Protección con huella dactilar activada</string>

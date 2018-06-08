@@ -7,10 +7,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.support.v4.view.GravityCompat;
@@ -36,6 +38,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.quadram.futh.helper.Constantes;
 import com.quadram.futh.service.ServiceListener;
 
 import java.util.ArrayList;
@@ -67,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ImageView imgGoogle;
     private TextView txvNameGoogle, txvGmail;
     private DeviceFragment df;
+    private boolean isFingerprintActivated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,11 +82,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startService(i);
         }
 
+        checkSharedPreferences();  // Se comprueba si existe SharedPreferences, y de no existir se inicializa
+
         devicesMap = new HashMap<>();  // Se inicializa vacio el Map de dispositivos
 
         mBound = false;  // Por defecto se indica que no está enlazado al servicio de notificaciones
-
-        df = new DeviceFragment();  // Se crea una instancia del fragment
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -206,6 +210,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Bundle args = new Bundle();
         idDevice = getKeyFromValue(devicesMap, idDevice).toString();
         args.putString("idDevice", idDevice);
+        df = new DeviceFragment();
         df.setArguments(args);
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction().replace(R.id.containerFragment, df).commit();
@@ -245,9 +250,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            SettingsFragment sf = new SettingsFragment();
+            FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction().replace(R.id.containerFragment, sf).commit();
         }
 
         return super.onOptionsItemSelected(item);
@@ -324,17 +330,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     for (int i = 0; i < devices.size(); i++) {
                         final int finalI = i;
                         mDevices.add(devices.get(i)).setIcon(R.drawable.ic_arduino).setOnMenuItemClickListener(menuItem -> {
-                            String device = devices.get(finalI);
-                            FingerprintManagerCompat fingerprintManagerCompat = FingerprintManagerCompat.from(getApplicationContext());
-                            if (!fingerprintManagerCompat.isHardwareDetected()) {  // El dispositivo no soporta la autenticacion con huella dactilar
-                                Toast.makeText(getApplicationContext(), "El dispositivo no es compatible", Toast.LENGTH_LONG).show();
+                            String device = devices.get(finalI);  // Se obtiene el id del dispositivo
+                            checkSharedPreferences();  // Se actualizan las preferencias del usuario
+                            if (isFingerprintActivated) {  // Si la proteccion con huella esta activada
+                                if (!FingerprintDialog.isAvailable(getApplicationContext())) {  // Si el dispositivo no soporta la autenticacion con huella o no hay ninguna registrada
+                                    Toast.makeText(getApplicationContext(), "El dispositivo no soporta la autenticacion con huella dactilar o no hay ninguna registrada", Toast.LENGTH_LONG).show();
+                                    openFragmentDevice(device);  // Se abre el fragment seleccionado
+                                }
+                                else {  // Si el dispositivo soporta autenticacion con huella
+                                    showFingerPrintDialog(device);  // Se muestra el dialogo para autenticarse con huella dactilar
+                                }
+                            }
+                            else {  // No se ha activado la proteccion mediante huella dactilar
                                 openFragmentDevice(device);  // Se abre el fragment seleccionado
-                            }
-                            else if (!fingerprintManagerCompat.hasEnrolledFingerprints()) {  // El usuario no tiene huellas dactilares guardadas para autenticarse
-                                Toast.makeText(getApplicationContext(), "No se han registrado huellas dactilares", Toast.LENGTH_LONG).show();
-                            }
-                            else {  // Disponible para autenticacion con huella dactilar
-                                showFingerPrintDialog(device);  // Se muestra el dialogo para autenticarse con huella dactilar
                             }
                             return onOptionsItemSelected(menuItem);
                         });
@@ -380,12 +388,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             .cancelOnPressBack(true)  // Se permite que se cancele el dialogo pulsando el boton de atras
             .cancelOnTouchOutside(true)  // Se permite que se cancele el dialogo pulsando fuera de el
             .tryLimit(3, (fingerprintDialog) -> {  // Se establece el numero de intentos
-                if (df.isVisible()) {
-                    FragmentManager fm = getSupportFragmentManager();
-                    fm.beginTransaction().hide(df).commit();
-                }
+                removeFragments();
                 fingerprintDialog.dismiss();  // Se cierra el dialogo cuando se alcanza el limite
-                Toast.makeText(getApplicationContext(), "Has alcanzado el limite máximo de intentos", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Has alcanzado el limite de intentos", Toast.LENGTH_LONG).show();
             })
             .callback(new FingerprintDialogCallback() {
                 @Override
@@ -399,5 +404,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             })
             .show();
+    }
+
+    private void removeFragments() {
+        if (getSupportFragmentManager().getFragments() != null && getSupportFragmentManager().getFragments().size() > 0) {
+            for (int i = 0; i < getSupportFragmentManager().getFragments().size(); i++) {
+                Fragment mFragment = getSupportFragmentManager().getFragments().get(i);
+                if (mFragment != null) {
+                    getSupportFragmentManager().beginTransaction().remove(mFragment).commit();
+                }
+            }
+        }
+    }
+
+    private void checkSharedPreferences() {
+        SharedPreferences sp = getSharedPreferences(Constantes.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor;
+        if (!sp.contains(Constantes.SHARED_PREFERENCES_FINGERPRINT)) {
+            editor = sp.edit();
+            editor.putBoolean(Constantes.SHARED_PREFERENCES_FINGERPRINT, false);
+            editor.apply();
+        }
+        else {
+            isFingerprintActivated = sp.getBoolean(Constantes.SHARED_PREFERENCES_FINGERPRINT, false);
+        }
+        Log.d("SHAREDPREFERENCES", "checkSharedPreferences: "+isFingerprintActivated);
     }
 }

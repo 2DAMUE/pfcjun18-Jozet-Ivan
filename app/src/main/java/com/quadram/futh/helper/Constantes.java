@@ -16,6 +16,8 @@ public class Constantes {
     public static final String CHANNEL_LIGHT = "Light";
     public static final String CHANNEL_PLUG = "Plug";
     public static final String CHANNEL_TEMPERATURE = "Temperature";
+    public static final String SHARED_PREFERENCES_NAME = "FUTH";
+    public static final String SHARED_PREFERENCES_FINGERPRINT = "fingerprint";
 
     // COMANDOS DE VOZ PARA NOTIFICACIONES DE LUZ
     public static final String[] COMANDOS_ENCENDER_LUZ = {
