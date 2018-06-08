@@ -216,6 +216,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fm.beginTransaction().replace(R.id.containerFragment, df).commit();
     }
 
+    private void openFragmentSettings() {
+        SettingsFragment sf = new SettingsFragment();
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction().replace(R.id.containerFragment, sf).commit();
+    }
+
 
     @Override
     protected void onResume() {
@@ -251,9 +257,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            SettingsFragment sf = new SettingsFragment();
-            FragmentManager fm = getSupportFragmentManager();
-            fm.beginTransaction().replace(R.id.containerFragment, sf).commit();
+            checkSharedPreferences();
+            if (isFingerprintActivated && FingerprintDialog.isAvailable(getApplicationContext())) {
+                showFingerPrintDialog(Constantes.SETTINGS);
+            }
+            else {
+                openFragmentSettings();
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -334,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             checkSharedPreferences();  // Se actualizan las preferencias del usuario
                             if (isFingerprintActivated) {  // Si la proteccion con huella esta activada
                                 if (!FingerprintDialog.isAvailable(getApplicationContext())) {  // Si el dispositivo no soporta la autenticacion con huella o no hay ninguna registrada
-                                    Toast.makeText(getApplicationContext(), "El dispositivo no soporta la autenticacion con huella dactilar o no hay ninguna registrada", Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(getApplicationContext(), "El dispositivo no soporta la autenticacion con huella dactilar o no hay ninguna registrada", Toast.LENGTH_LONG).show();
                                     openFragmentDevice(device);  // Se abre el fragment seleccionado
                                 }
                                 else {  // Si el dispositivo soporta autenticacion con huella
@@ -395,7 +405,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             .callback(new FingerprintDialogCallback() {
                 @Override
                 public void onAuthenticationSucceeded() {
-                    openFragmentDevice(device);  // Se abre el fragment seleccionado
+                    if (device.equals(Constantes.SETTINGS)){  // Si se indica que es para el fragment de settings
+                        openFragmentSettings();
+                    }
+                    else {
+                        openFragmentDevice(device);  // Se abre el fragment seleccionado
+                    }
                 }
 
                 @Override
