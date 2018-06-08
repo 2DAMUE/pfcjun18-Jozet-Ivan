@@ -10,55 +10,46 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppBarOverlay"
+        android:background="@color/colorPrimary"
         android:fitsSystemWindows="true">
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsingtoolbar"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            app:popupTheme="@style/PopupOverlay"
+            app:title="Futh"
+            app:titleTextColor="@color/colorPrimary"
+            android:background="#ffffff"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            app:layout_scrollFlags="exitUntilCollapsed|scroll"
-            app:contentScrim="?attr/colorPrimary"
-            app:title="@string/appTitle"
-            android:fitsSystemWindows="true"
-            app:expandedTitleMarginStart="48dp"
-            android:background="@color/colorPrimary"
-            app:expandedTitleMarginEnd="64dp">
-            
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:layout_collapseMode="pin"
-                android:background="@color/colorPrimary"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"/>
-            
-        </android.support.design.widget.CollapsingToolbarLayout>
+            android:layout_height="?attr/actionBarSize"/>
 
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout
-        android:id="@+id/containerFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <RelativeLayout
+            android:id="@+id/containerFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+<!--
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="580dp"
+                android:background="@drawable/home_difuminado"
+                android:padding="0dp"
+                android:layout_margin="0dp"
+                />-->
 
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        </RelativeLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabAddDevices"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/fab_margin"
-            app:fabSize="normal"
-            android:src="@drawable/plus"
-            app:backgroundTint="@color/colorPrimary" />
-
-    </android.support.v4.widget.NestedScrollView>
-    </RelativeLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAddDevices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_margin="@dimen/fab_margin"
+        app:fabSize="normal"
+        android:src="@drawable/plus"
+        app:backgroundTint="@color/colorPrimary" />
 
 </android.support.design.widget.CoordinatorLayout>

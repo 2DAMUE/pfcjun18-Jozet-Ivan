@@ -3,4 +3,8 @@
     <color name="colorPrimary">#FFFFA848</color>
     <color name="colorPrimaryDark">#FFA000</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorGas">#ffb3ba</color>
+    <color name="colorHumedad">#bae1ff</color>
+    <color name="colorLight">#FFFD51</color>
+    <color name="colorRele">#30FD51</color>
 </resources>
