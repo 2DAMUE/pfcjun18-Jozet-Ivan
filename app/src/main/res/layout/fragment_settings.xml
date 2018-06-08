@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <Switch
+        android:id="@+id/swFingerprint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="32dp"
+        android:fontFamily="sans-serif"
+        android:text="@string/switch_fingerprint"
+        android:textOff="@string/switch_fingerprint_off"
+        android:textOn="@string/switch_fingerprint_on"
+        android:textSize="18sp" />
+</FrameLayout>
