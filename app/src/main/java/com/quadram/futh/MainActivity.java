@@ -187,16 +187,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void addDeviceFirebase(String idDevice, AlertDialog dialog) {
         mDevices.add(R.id.gDevices,101,0,idDevice).setIcon(R.drawable.ic_arduino).setOnMenuItemClickListener(menuItem -> {
-            FingerprintManagerCompat fingerprintManagerCompat = FingerprintManagerCompat.from(getApplicationContext());
-            if (!fingerprintManagerCompat.isHardwareDetected()) {  // El dispositivo no soporta la autenticacion con huella dactilar
-                Toast.makeText(getApplicationContext(), "El dispositivo no es compatible", Toast.LENGTH_LONG).show();
+            checkSharedPreferences();  // Se actualizan las preferencias del usuario
+            if (isFingerprintActivated) {  // Si la proteccion con huella esta activada
+                if (!FingerprintDialog.isAvailable(getApplicationContext())) {  // Si el dispositivo no soporta la autenticacion con huella o no hay ninguna registrada
+                    Toast.makeText(getApplicationContext(), "El dispositivo no soporta la autenticacion con huella dactilar o no hay ninguna registrada", Toast.LENGTH_LONG).show();
+                    openFragmentDevice(idDevice);  // Se abre el fragment seleccionado
+                }
+                else {  // Si el dispositivo soporta autenticacion con huella
+                    showFingerPrintDialog(idDevice);  // Se muestra el dialogo para autenticarse con huella dactilar
+                }
+            }
+            else {  // No se ha activado la proteccion mediante huella dactilar
                 openFragmentDevice(idDevice);  // Se abre el fragment seleccionado
-            }
-            else if (!fingerprintManagerCompat.hasEnrolledFingerprints()) {  // El usuario no tiene huellas dactilares guardadas para autenticarse
-                Toast.makeText(getApplicationContext(), "No se han registrado huellas dactilares", Toast.LENGTH_LONG).show();
-            }
-            else {  // Disponible para autenticacion con huella dactilar
-                showFingerPrintDialog(idDevice);  // Se muestra el dialogo para autenticarse con huella dactilar
             }
             return  onOptionsItemSelected(menuItem);
         });
