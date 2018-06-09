@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="appTitle">Futh</string>
-    <string name="idDevice">ID DISPOSITIVO:</string>
+    <string name="idDevice">ID DISPOSITIVO</string>
     <string name="txvAddDevice">AÑADIR DISPOSITIVO</string>
     <string name="btnAddDevice">AÑADIR</string>
 

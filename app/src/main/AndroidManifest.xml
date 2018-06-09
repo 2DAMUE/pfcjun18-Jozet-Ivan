@@ -31,7 +31,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main2"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/CustomAppTheme" />
 
         <!-- Servicio que inicia el listener de Firebase cuando arranca Android -->
         <receiver
@@ -70,7 +70,7 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".SplashActivity"></activity>
+        <activity android:name=".SplashActivity" />
     </application>
 
 </manifest>

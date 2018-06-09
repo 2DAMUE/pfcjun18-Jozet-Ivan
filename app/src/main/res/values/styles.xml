@@ -1,23 +1,29 @@
 <resources>
 
-    <!-- Base application theme. -->
+    <!-- Application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
+    <!-- Toolbar style. -->
     <style name="DrawerIcon" parent="@style/Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
         <item name="color">@color/colorPrimary</item>
     </style>
-    <style name="CustomAppTheme" parent="Theme.AppCompat">
+
+    <!-- Custom application theme. -->
+    <style name="CustomAppTheme" parent="AppTheme">
         <item name="android:textColorPrimaryDisableOnly">#00838f</item>
-        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorControlNormal">@color/colorPrimaryDark</item>
+        <item name="colorControlActivated">@color/colorAccentLight</item>
+        <item name="colorControlHighlight">@color/colorAccentLight</item>
+        <item name="drawerArrowStyle">@style/DrawerIcon</item>
+    </style>
+
+    <!-- TextInputLayout style. -->
+    <style name="TextInputLayoutStyle" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/colorAccentLight</item>
     </style>
 </resources>

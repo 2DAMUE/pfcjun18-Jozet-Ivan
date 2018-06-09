@@ -9,7 +9,7 @@
     <string name="settings">Ajustes</string>
     <string name="not_close_session">No se ha podido cerrar sesión</string>
     <string name="appTitle">Futh</string>
-    <string name="idDevice">ID DISPOSITIVO:</string>
+    <string name="idDevice">ID DISPOSITIVO</string>
     <string name="txvAddDevice">AÑADIR DISPOSITIVO</string>
     <string name="btnAddDevice">AÑADIR</string>
 
