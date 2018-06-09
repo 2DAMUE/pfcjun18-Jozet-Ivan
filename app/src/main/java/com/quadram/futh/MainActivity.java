@@ -15,7 +15,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -97,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         fabAddDevices = findViewById(R.id.fabAddDevices);
 
-        fabAddDevices.setOnClickListener(view -> addDevices());
+        fabAddDevices.setOnClickListener(view -> addDevice());
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -142,14 +141,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private void addDevices() {
+    private void addDevice() {
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
         AlertDialog.Builder aBuilder = new AlertDialog.Builder(MainActivity.this);
-        View mView = getLayoutInflater().inflate(R.layout.dialog_add_devices, null);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_add_device, null);
 
-        final EditText etIdDevice = mView.findViewById(R.id.etIdDevice);
-        Button btnAddDevice = mView.findViewById(R.id.btnAdd);
+        final EditText etIdAddDevice = mView.findViewById(R.id.etIdAddDevice);
+        Button btnAddDevice = mView.findViewById(R.id.btnAddDevice);
 
         aBuilder.setView(mView);
         final AlertDialog dialog = aBuilder.create();
@@ -159,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         btnAddDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String idDevice = etIdDevice.getText().toString().trim();  // Se obtiene el ID introducido
+                final String idDevice = etIdAddDevice.getText().toString().trim();  // Se obtiene el ID introducido
 
                 reference.child("users").child(currentUser.getUid()).child("devices").child(idDevice).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -186,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void addDeviceFirebase(String idDevice, AlertDialog dialog) {
-        mDevices.add(R.id.gDevices,101,0,idDevice).setIcon(R.drawable.ic_arduino).setOnMenuItemClickListener(menuItem -> {
+        mDevices.add(R.id.gDevices, mDevices.size(),0,idDevice).setIcon(R.drawable.ic_arduino).setOnMenuItemClickListener(menuItem -> {
             checkSharedPreferences();  // Se actualizan las preferencias del usuario
             if (isFingerprintActivated) {  // Si la proteccion con huella esta activada
                 if (!FingerprintDialog.isAvailable(getApplicationContext())) {  // Si el dispositivo no soporta la autenticacion con huella o no hay ninguna registrada
@@ -206,6 +205,58 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DatabaseReference refUsers = refRaiz.child("users").child(firebaseAuth.getCurrentUser().getUid());
         refUsers.child("devices").child(idDevice).setValue(idDevice);
         dialog.dismiss();
+    }
+
+    private void removeDevice() {
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+        AlertDialog.Builder aBuilder = new AlertDialog.Builder(MainActivity.this);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_delete_device, null);
+
+        final EditText etIdDeleteDevice = mView.findViewById(R.id.etIdDeleteDevice);
+        Button btnDeleteDevice = mView.findViewById(R.id.btnDeleteDevice);
+
+        aBuilder.setView(mView);
+        final AlertDialog dialog = aBuilder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+
+        btnDeleteDevice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String idDevice = etIdDeleteDevice.getText().toString().trim();  // Se obtiene el ID introducido
+
+                reference.child("users").child(currentUser.getUid()).child("devices").child(idDevice).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        if(idDevice.equals("")){  // Si se dejo el EditText vacio
+                            Toast.makeText(getApplicationContext(), "Debes introducir un ID", Toast.LENGTH_SHORT).show();
+                        }
+                        else if (snapshot.getValue() != null) {  // Si el dispositivo esta sincronizado con el usuario
+                            for (int i=0; i<mDevices.size(); i++) {  // Se comprueban todos los items del menu
+                                MenuItem mItem = mDevices.getItem(i);  // Se recupera el item
+                                String mItemIdDevice = getKeyFromValue(devicesMap, mItem.getTitle().toString()).toString();  // Se recupera el id a partir del texto del item
+                                if (idDevice.equalsIgnoreCase(mItemIdDevice)) {  // Si el id coincide con el del item
+                                    mDevices.removeItem(mItem.getItemId());  // Se elimina el item del menu
+                                    devicesMap.remove(mItemIdDevice);  // Se elimina el id del Map que los contiene
+                                    reference.child("users").child(currentUser.getUid()).child("devices").child(idDevice).setValue(null);  // Se elimina el dispositivo sincronizado del usuario en Firebase
+                                }
+                            }
+                            dialog.dismiss();  // Se cierra el dialogo
+                        }
+                        else {  // El dispositivo no esta sincronizado con el usuario
+                            Toast.makeText(getApplicationContext(), "El dispositivo introducido no esta sincronizado", Toast.LENGTH_SHORT).show();
+                        }
+                        reference.removeEventListener(this);  // Se elimina el listener para liberar memoria
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        dialog.dismiss();
+                        reference.removeEventListener(this);  // Se elimina el listener para liberar memoria
+                    }
+                });
+            }
+        });
     }
 
     private void openFragmentDevice(String idDevice) {
@@ -272,6 +323,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             else {
                 openFragmentSettings();
             }
+        }
+        else if (id == R.id.action_delete) {
+            removeDevice();
         }
 
         return super.onOptionsItemSelected(item);
@@ -347,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     for (int i = 0; i < devices.size(); i++) {
                         final int finalI = i;
-                        mDevices.add(devices.get(i)).setIcon(R.drawable.ic_arduino).setOnMenuItemClickListener(menuItem -> {
+                        mDevices.add(R.id.gDevices, mDevices.size(),0,devices.get(i)).setIcon(R.drawable.ic_arduino).setOnMenuItemClickListener(menuItem -> {
                             String device = devices.get(finalI);  // Se obtiene el id del dispositivo
                             checkSharedPreferences();  // Se actualizan las preferencias del usuario
                             if (isFingerprintActivated) {  // Si la proteccion con huella esta activada

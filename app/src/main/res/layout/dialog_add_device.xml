@@ -15,7 +15,7 @@
         android:textStyle="bold"
         android:textColor="@color/colorAccentLight"
         android:layout_marginTop="5dp"
-        android:text="@string/txvAddDevice"/>
+        android:text="@string/tvAddDevice"/>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
@@ -26,14 +26,14 @@
         android:theme="@style/TextInputLayoutTheme">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/etIdDevice"
+            android:id="@+id/etIdAddDevice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/idDevice"/>
     </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:id="@+id/btnAdd"
+        android:id="@+id/btnAddDevice"
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

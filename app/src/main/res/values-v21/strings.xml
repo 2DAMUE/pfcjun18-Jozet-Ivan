@@ -2,10 +2,10 @@
 <resources>
     <string name="appTitle">Futh</string>
     <string name="idDevice">ID DISPOSITIVO</string>
-    <string name="txvAddDevice">AÑADIR DISPOSITIVO</string>
+    <string name="tvAddDevice">AÑADIR DISPOSITIVO</string>
     <string name="btnAddDevice">AÑADIR</string>
 
-    <string name="txvRenameDevice">RENOMBRAR DISPOSITIVO</string>
+    <string name="tvRenameDevice">RENOMBRAR DISPOSITIVO</string>
     <string name="btnRenameDevice">RENOMBRAR</string>
     <string name="textWelcome">¡BIENVENIDO A FUTH!</string>
     <string name="textDescription">Para comenzar a tener el control, añade tu primer dispositivo o accede a el.</string>

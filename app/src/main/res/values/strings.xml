@@ -9,13 +9,20 @@
     <string name="settings">Ajustes</string>
     <string name="not_close_session">No se ha podido cerrar sesión</string>
     <string name="appTitle">Futh</string>
-    <string name="idDevice">ID DISPOSITIVO</string>
-    <string name="txvAddDevice">AÑADIR DISPOSITIVO</string>
-    <string name="btnAddDevice">AÑADIR</string>
 
-    <string name="txvRenameDevice">RENOMBRAR DISPOSITIVO</string>
-    <string name="btnRenameDevice">RENOMBRAR</string>
-    <string name="idRenameDevice">NUEVO NOMBRE:</string>
+    <!-- Dialogo añadir dispositivo -->
+    <string name="idDevice">ID dispositivo</string>
+    <string name="tvAddDevice">Añadir dispositivo</string>
+    <string name="btnAddDevice">Añadir</string>
+
+    <!-- Dialogo renombrar dispositivo -->
+    <string name="tvRenameDevice">Renombrar dispositivo</string>
+    <string name="btnRenameDevice">Renombrar</string>
+    <string name="etRenameDevice">Nuevo nombre</string>
+
+    <!-- Dialogo eliminar dispositivo -->
+    <string name="tvDeleteDevice">Eliminar dispositivo</string>
+    <string name="btnDeleteDevice">Eliminar</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="switch_fingerprint">Protección con huella dactilar</string>
@@ -23,4 +30,5 @@
     <string name="switch_fingerprint_off">Protección con huella dactilar desactivada</string>
     <string name="textWelcome">¡BIENVENIDO A FUTH!</string>
     <string name="textDescription">Para comenzar a tener el control, añade tu primer dispositivo o accede a el.</string>
+    <string name="delete">Eliminar dispositivo</string>
 </resources>
