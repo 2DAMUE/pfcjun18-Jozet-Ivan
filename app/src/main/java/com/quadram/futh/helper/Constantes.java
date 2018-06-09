@@ -16,7 +16,9 @@ public class Constantes {
     public static final String CHANNEL_LIGHT = "Light";
     public static final String CHANNEL_PLUG = "Plug";
     public static final String CHANNEL_TEMPERATURE = "Temperature";
-    public static final String SETTINGS = "08213bc8-f1af-4e35-82a1-43b289f54b71";  // GUID para el boton de ajustes
+    public static final String ACTION_SETTINGS = "08213bc8-f1af-4e35-82a1-43b289f54b71";  // GUID para el boton de ajustes
+    public static final String ACTION_RENAME = "5a24f8d8-6fec-411b-a931-e3abb00a060e";  // GUID para el boton de renombrar dispositivo
+    public static final String ACTION_DELETE = "1d6b81c8-a618-4222-8038-23cfa9b6f3ca";  // GUID para el boton de eliminar dispositivo
     public static final String SHARED_PREFERENCES_NAME = "FUTH";
     public static final String SHARED_PREFERENCES_FINGERPRINT = "fingerprint";
 

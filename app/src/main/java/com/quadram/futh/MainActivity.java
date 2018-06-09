@@ -393,17 +393,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.action_settings) {
             checkSharedPreferences();
             if (isFingerprintActivated && FingerprintDialog.isAvailable(getApplicationContext())) {
-                showFingerPrintDialog(Constantes.SETTINGS);
+                showFingerPrintDialog(Constantes.ACTION_SETTINGS);
             }
             else {
                 openFragmentSettings();
             }
         }
-        else if (id == R.id.action_delete) {
-            removeDevice();
-        }
         else if (id == R.id.action_rename) {
-            renameDevice();
+            checkSharedPreferences();
+            if (isFingerprintActivated && FingerprintDialog.isAvailable(getApplicationContext())) {
+                showFingerPrintDialog(Constantes.ACTION_RENAME);
+            }
+            else {
+                renameDevice();
+            }
+        }
+        else if (id == R.id.action_delete) {
+            checkSharedPreferences();
+            if (isFingerprintActivated && FingerprintDialog.isAvailable(getApplicationContext())) {
+                showFingerPrintDialog(Constantes.ACTION_DELETE);
+            }
+            else {
+                removeDevice();
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -561,8 +573,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             .callback(new FingerprintDialogCallback() {
                 @Override
                 public void onAuthenticationSucceeded() {
-                    if (device.equals(Constantes.SETTINGS)){  // Si se indica que es para el fragment de settings
+                    if (device.equals(Constantes.ACTION_SETTINGS)){  // Si se indica que es para el fragment de settings
                         openFragmentSettings();
+                    }
+                    else if (device.equals(Constantes.ACTION_RENAME)){  // Si se indica que es para el dialogo de renombrar dispositivo
+                        renameDevice();
+                    }
+                    else if (device.equals(Constantes.ACTION_DELETE)){  // Si se indica que es para el dialogo de eliminar dispositivo
+                        removeDevice();
                     }
                     else {
                         openFragmentDevice(device);  // Se abre el fragment seleccionado
