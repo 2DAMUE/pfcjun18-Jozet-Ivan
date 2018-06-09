@@ -5,16 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".SettingsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <Switch
         android:id="@+id/swFingerprint"
+        android:theme="@style/SwitchStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="32dp"
         android:backgroundTint="@color/colorPrimary"
         android:fontFamily="sans-serif"
         android:text="@string/switch_fingerprint"
+        android:textColor="@android:color/black"
         android:textOff="@string/switch_fingerprint_off"
         android:textOn="@string/switch_fingerprint_on"
         android:textSize="18sp" />

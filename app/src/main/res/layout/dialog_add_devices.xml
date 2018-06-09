@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:textSize="25sp"
         android:textStyle="bold"
-        android:textColor="#FFFD7274"
+        android:textColor="@color/colorAccentLight"
         android:layout_marginTop="5dp"
         android:text="@string/txvAddDevice"/>
 
@@ -22,7 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:layout_marginBottom="50dp"
-        app:hintTextAppearance="@style/TextInputLayoutStyle">
+        app:hintTextAppearance="@style/TextInputLayoutStyle"
+        android:theme="@style/TextInputLayoutTheme">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/etIdDevice"
