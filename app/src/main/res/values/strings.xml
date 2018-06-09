@@ -6,7 +6,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="settings">Ajustes</string>
     <string name="not_close_session">No se ha podido cerrar sesión</string>
     <string name="appTitle">Futh</string>
 
@@ -18,11 +17,16 @@
     <!-- Dialogo renombrar dispositivo -->
     <string name="tvRenameDevice">Renombrar dispositivo</string>
     <string name="btnRenameDevice">Renombrar</string>
-    <string name="etRenameDevice">Nuevo nombre</string>
+    <string name="etNewNameDevice">Nuevo nombre</string>
 
     <!-- Dialogo eliminar dispositivo -->
     <string name="tvDeleteDevice">Eliminar dispositivo</string>
     <string name="btnDeleteDevice">Eliminar</string>
+
+    <!-- Botones toolbar -->
+    <string name="itemSettings">Ajustes</string>
+    <string name="itemDeleteDevice">Eliminar dispositivo</string>
+    <string name="itemRenameDevice">Renombrar dispositivo</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="switch_fingerprint">Protección con huella dactilar</string>
@@ -30,5 +34,4 @@
     <string name="switch_fingerprint_off">Protección con huella dactilar desactivada</string>
     <string name="textWelcome">¡BIENVENIDO A FUTH!</string>
     <string name="textDescription">Para comenzar a tener el control, añade tu primer dispositivo o accede a el.</string>
-    <string name="delete">Eliminar dispositivo</string>
 </resources>

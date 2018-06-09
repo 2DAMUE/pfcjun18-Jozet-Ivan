@@ -259,6 +259,81 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+    private void renameDevice() {
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+        AlertDialog.Builder aBuilder = new AlertDialog.Builder(MainActivity.this);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_rename_device, null);
+
+        final EditText etIdRenameDevice = mView.findViewById(R.id.etIdRenameDevice);
+        final EditText etNewNameRenameDevice = mView.findViewById(R.id.etNewNameDevice);
+        Button btnRenameDevice = mView.findViewById(R.id.btnRenameDevice);
+
+        aBuilder.setView(mView);
+        final AlertDialog dialog = aBuilder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+
+        btnRenameDevice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String idDevice = etIdRenameDevice.getText().toString().trim();  // Se obtiene el ID introducido
+                final String newNameDevice = etNewNameRenameDevice.getText().toString().trim();  // Se obtiene el ID introducido
+
+                reference.child("users").child(currentUser.getUid()).child("devices").child(idDevice).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        if(idDevice.equals("") && newNameDevice.equals("")){  // Si se dejo el EditText vacio
+                            Toast.makeText(getApplicationContext(), "Debes rellenar todos los campos", Toast.LENGTH_SHORT).show();
+                        }
+                        else if (snapshot.getValue() != null) {  // Si el dispositivo esta sincronizado con el usuario
+                            for (int i=0; i<mDevices.size(); i++) {  // Se comprueban todos los items del menu
+                                MenuItem mItem = mDevices.getItem(i);  // Se recupera el item
+                                String mItemIdDevice = getKeyFromValue(devicesMap, mItem.getTitle().toString()).toString();  // Se recupera el id a partir del texto del item
+                                if (idDevice.equalsIgnoreCase(mItemIdDevice)) {  // Si el id coincide con el del item
+                                    if (devicesMap.containsValue(newNameDevice)) {  // Ya existe un dispositivo con ese nombre
+                                        Toast.makeText(getApplicationContext(), "Ya existe un dispositivo con ese nombre", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else {  // El nombre esta libre
+                                        // Se actualiza el nombre del boton en el hamburger menu y su OnMenuItemClickListener
+                                        mDevices.getItem(mItem.getItemId()).setTitle(newNameDevice).setOnMenuItemClickListener(menuItem -> {
+                                            checkSharedPreferences();  // Se actualizan las preferencias del usuario
+                                            if (isFingerprintActivated) {  // Si la proteccion con huella esta activada
+                                                if (!FingerprintDialog.isAvailable(getApplicationContext())) {  // Si el dispositivo no soporta la autenticacion con huella o no hay ninguna registrada
+                                                    Toast.makeText(getApplicationContext(), "El dispositivo no soporta la autenticacion con huella dactilar o no hay ninguna registrada", Toast.LENGTH_LONG).show();
+                                                    openFragmentDevice(newNameDevice);  // Se abre el fragment seleccionado
+                                                }
+                                                else {  // Si el dispositivo soporta autenticacion con huella
+                                                    showFingerPrintDialog(newNameDevice);  // Se muestra el dialogo para autenticarse con huella dactilar
+                                                }
+                                            }
+                                            else {  // No se ha activado la proteccion mediante huella dactilar
+                                                openFragmentDevice(newNameDevice);  // Se abre el fragment seleccionado
+                                            }
+                                            return onOptionsItemSelected(menuItem);
+                                        });
+                                        devicesMap.put(mItemIdDevice, newNameDevice);  // Se actualiza el nombre del dispositivo en el Map que los contiene
+                                        reference.child("users").child(currentUser.getUid()).child("devices").child(idDevice).setValue(newNameDevice);  // Se renombra el dispositivo sincronizado del usuario en Firebase
+                                        dialog.dismiss();  // Se cierra el dialogo
+                                    }
+                                }
+                            }
+                        }
+                        else {  // El dispositivo no esta sincronizado con el usuario
+                            Toast.makeText(getApplicationContext(), "El dispositivo introducido no esta sincronizado", Toast.LENGTH_SHORT).show();
+                        }
+                        reference.removeEventListener(this);  // Se elimina el listener para liberar memoria
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        dialog.dismiss();
+                        reference.removeEventListener(this);  // Se elimina el listener para liberar memoria
+                    }
+                });
+            }
+        });
+    }
+
     private void openFragmentDevice(String idDevice) {
         Bundle args = new Bundle();
         idDevice = getKeyFromValue(devicesMap, idDevice).toString();
@@ -326,6 +401,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else if (id == R.id.action_delete) {
             removeDevice();
+        }
+        else if (id == R.id.action_rename) {
+            renameDevice();
         }
 
         return super.onOptionsItemSelected(item);

@@ -21,15 +21,16 @@
         <item name="drawerArrowStyle">@style/DrawerIcon</item>
     </style>
 
-    <!-- TextInputLayout style. -->
-    <style name="TextInputLayoutStyle" parent="@android:style/TextAppearance">
-        <item name="android:textColor">@color/colorAccentLight</item>
-    </style>
-
     <!-- TextInputLayout theme. -->
-    <style name="TextInputLayoutTheme">
+    <style name="TextInputLayoutTheme" parent="TextAppearance.AppCompat">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@color/colorPrimaryDark</item>
+        <!-- Label color in TRUE state -->
+        <item name="colorAccent">@color/colorAccentLight</item>
+        <!-- Bar color in FALSE State -->
+        <item name="colorControlNormal">@color/colorPrimaryDark</item>
+        <!-- Bar color in TRUE State -->
         <item name="colorControlActivated">@color/colorAccentLight</item>
-        <item name="colorControlHighlight">@color/colorAccentLight</item>
     </style>
 
     <!-- Switch theme. -->

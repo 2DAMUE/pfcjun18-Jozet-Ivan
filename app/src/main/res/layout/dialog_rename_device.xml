@@ -14,29 +14,42 @@
         android:textStyle="bold"
         android:textColor="@color/colorAccentLight"
         android:layout_marginTop="5dp"
-        android:text="@string/tvDeleteDevice"/>
+        android:text="@string/tvRenameDevice"/>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:layout_marginBottom="50dp"
         android:theme="@style/TextInputLayoutTheme">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/etIdDeleteDevice"
+            android:id="@+id/etIdRenameDevice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/idDevice"/>
     </android.support.design.widget.TextInputLayout>
 
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="50dp"
+        android:theme="@style/TextInputLayoutTheme">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/etNewNameDevice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/etNewNameDevice"/>
+    </android.support.design.widget.TextInputLayout>
+
     <Button
-        android:id="@+id/btnDeleteDevice"
+        android:id="@+id/btnRenameDevice"
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@animator/rounded_button_degradado"
         android:textColor="@android:color/white"
-        android:text="@string/btnDeleteDevice"/>
+        android:text="@string/btnRenameDevice"/>
 
 </LinearLayout>
