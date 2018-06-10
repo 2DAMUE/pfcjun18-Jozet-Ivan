@@ -338,6 +338,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Bundle args = new Bundle();
         idDevice = getKeyFromValue(devicesMap, idDevice).toString();
         args.putString("idDevice", idDevice);
+        args.putString("deviceName", devicesMap.get(idDevice));
         df = new DeviceFragment();
         df.setArguments(args);
         FragmentManager fm = getSupportFragmentManager();
@@ -355,7 +356,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction().replace(R.id.containerFragment, sf).commit();
     }
-
 
     @Override
     protected void onResume() {

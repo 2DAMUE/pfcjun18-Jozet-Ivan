@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,7 +41,10 @@ public class DeviceFragment extends Fragment {
 
     private Calendar date;
 
+    private String idDevice, deviceName;
+
     private ImageView imgGas, imgHumidity, imgRele1, imgRele2, imgTemperature;
+    private TextView txvDeviceName;
     private TextView  txvGasName, txvGasRisk;
     private TextView txvHumidityName, txvHumidityValue;
     private TextView txvRele1Name, txvRele1Value;
@@ -56,7 +60,8 @@ public class DeviceFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_device, container, false);
-        String idDevice = getArguments().getString("idDevice");
+        idDevice = getArguments().getString("idDevice");
+        deviceName = getArguments().getString("deviceName");
 
         v.setBackgroundResource(R.drawable.home_difuminado);
 
@@ -68,6 +73,8 @@ public class DeviceFragment extends Fragment {
         imgRele1 = v.findViewById(R.id.idRele1Img);
         imgRele2 = v.findViewById(R.id.idRele2Img);
         imgTemperature = v.findViewById(R.id.idTemperatureImg);
+
+        txvDeviceName = v.findViewById(R.id.tvFragmentDeviceName);
 
         txvGasName = v.findViewById(R.id.idGasName);
         txvGasRisk = v.findViewById(R.id.idGasRisk);
@@ -212,6 +219,7 @@ public class DeviceFragment extends Fragment {
                 }
                 else {
                     Toast.makeText(getContext(),"No hay informacion disponible",Toast.LENGTH_LONG).show();
+                    removeFragments();
                 }
                 ref.removeEventListener(vel);
             }
@@ -225,6 +233,9 @@ public class DeviceFragment extends Fragment {
     }
 
     private void rellenarCardView() {
+        // DEVICE NAME
+        txvDeviceName.setText(deviceName);
+
         // GAS
         txvGasName.setText(device.getGas().getName());
         txvGasRisk.setText(String.valueOf(device.getGas().getRisk()));
@@ -273,5 +284,23 @@ public class DeviceFragment extends Fragment {
         txvTemperatureValue.setText(String.valueOf(device.getTemperature().getValue()));
         imgTemperature.setImageResource(R.drawable.ic_temperature_icon_vector);
         imgTemperature.setColorFilter(Color.parseColor("#f5654c"));
+    }
+
+    private void removeFragments() {
+        if (getActivity().getSupportFragmentManager().getFragments() != null && getActivity().getSupportFragmentManager().getFragments().size() > 1) {
+            for (int i = 1; i < getActivity().getSupportFragmentManager().getFragments().size(); i++) {
+                Fragment mFragment = getActivity().getSupportFragmentManager().getFragments().get(i);
+                if (mFragment != null) {
+                    getActivity().getSupportFragmentManager().beginTransaction().remove(mFragment).commit();
+                }
+            }
+        }
+        openFragmentWelcome();
+    }
+
+    private void openFragmentWelcome(){
+        WelcomeFragment dfWelcome = new WelcomeFragment();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        fm.beginTransaction().replace(R.id.containerFragment,dfWelcome).commit();
     }
 }
