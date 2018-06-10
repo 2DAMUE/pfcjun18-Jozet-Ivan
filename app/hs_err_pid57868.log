@@ -1,0 +1,158 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (malloc) failed to allocate 1048576 bytes for AllocateHeap
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   In 32 bit mode, the process size limit was hit
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Use 64 bit Java on a 64 bit OS
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (memory/allocation.inline.hpp:61), pid=57868, tid=0x000000000000b9f0
+#
+# JRE version:  (8.0_152-b02) (build )
+# Java VM: OpenJDK 64-Bit Server VM (25.152-b02 mixed mode windows-amd64 compressed oops)
+# Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00000000021ff000):  JavaThread "Unknown thread" [_thread_in_vm, id=47600, stack(0x0000000002560000,0x0000000002660000)]
+
+Stack: [0x0000000002560000,0x0000000002660000]
+[error occurred during error reporting (printing stack bounds), id 0xc0000005]
+
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+
+Other Threads:
+
+=>0x00000000021ff000 (exited) JavaThread "Unknown thread" [_thread_in_vm, id=47600, stack(0x0000000002560000,0x0000000002660000)]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap:
+ PSYoungGen      total 18944K, used 327K [0x00000000feb00000, 0x0000000100000000, 0x0000000100000000)
+  eden space 16384K, 2% used [0x00000000feb00000,0x00000000feb51ec8,0x00000000ffb00000)
+  from space 2560K, 0% used [0x00000000ffd80000,0x00000000ffd80000,0x0000000100000000)
+  to   space 2560K, 0% used [0x00000000ffb00000,0x00000000ffb00000,0x00000000ffd80000)
+ ParOldGen       total 44032K, used 0K [0x00000000fc000000, 0x00000000feb00000, 0x00000000feb00000)
+  object space 44032K, 0% used [0x00000000fc000000,0x00000000fc000000,0x00000000feb00000)
+ Metaspace       used 772K, capacity 4480K, committed 4480K, reserved 1056768K
+  class space    used 73K, capacity 384K, committed 384K, reserved 1048576K
+
+Card table byte_map: [0x00000000003c0000,0x00000000003f0000] byte_map_base: 0xffffffffffbe0000
+
+Marking Bits: (ParMarkBitMap*) 0x00000000549f4970
+ Begin Bits: [0x0000000012b00000, 0x0000000012c00000)
+ End Bits:   [0x0000000012c00000, 0x0000000012d00000)
+
+Polling page: 0x0000000000390000
+
+CodeCache: size=245760Kb used=328Kb max_used=328Kb free=245431Kb
+ bounds [0x0000000002930000, 0x0000000002ba0000, 0x0000000011930000]
+ total_blobs=57 nmethods=0 adapters=38
+ compilation: enabled
+
+Compilation events (0 events):
+No events
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+Events (10 events):
+Event: 0.172 loading class java/lang/Short
+Event: 0.173 loading class java/lang/Short done
+Event: 0.173 loading class java/lang/Integer
+Event: 0.173 loading class java/lang/Integer done
+Event: 0.173 loading class java/lang/Long
+Event: 0.173 loading class java/lang/Long done
+Event: 0.173 loading class java/lang/NullPointerException
+Event: 0.173 loading class java/lang/NullPointerException done
+Event: 0.173 loading class java/lang/ArithmeticException
+Event: 0.173 loading class java/lang/ArithmeticException done
+
+
+Dynamic libraries:
+0x000000013f160000 - 0x000000013f191000 	C:\Program Files\Android\Android Studio\jre\bin\java.exe
+0x00000000773d0000 - 0x000000007756f000 	C:\Windows\SYSTEM32\ntdll.dll
+0x000007fef7b50000 - 0x000007fef7b84000 	D:\Program Files\AVAST Software\Avast\x64\aswhooka.dll
+0x00000000771b0000 - 0x00000000772cf000 	C:\Windows\system32\kernel32.dll
+0x000007fefd2c0000 - 0x000007fefd32a000 	C:\Windows\system32\KERNELBASE.dll
+0x000007feff3c0000 - 0x000007feff49b000 	C:\Windows\system32\ADVAPI32.dll
+0x000007feff4f0000 - 0x000007feff58f000 	C:\Windows\system32\msvcrt.dll
+0x000007fefebf0000 - 0x000007fefec0f000 	C:\Windows\SYSTEM32\sechost.dll
+0x000007feff590000 - 0x000007feff6bd000 	C:\Windows\system32\RPCRT4.dll
+0x00000000772d0000 - 0x00000000773ca000 	C:\Windows\system32\USER32.dll
+0x000007fefd930000 - 0x000007fefd997000 	C:\Windows\system32\GDI32.dll
+0x000007fefec10000 - 0x000007fefec1e000 	C:\Windows\system32\LPK.dll
+0x000007fefd520000 - 0x000007fefd5eb000 	C:\Windows\system32\USP10.dll
+0x000007fefb760000 - 0x000007fefb954000 	C:\Windows\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.7601.18837_none_fa3b1e3d17594757\COMCTL32.dll
+0x000007fefd4a0000 - 0x000007fefd511000 	C:\Windows\system32\SHLWAPI.dll
+0x000007fefd470000 - 0x000007fefd49e000 	C:\Windows\system32\IMM32.DLL
+0x000007fefd780000 - 0x000007fefd889000 	C:\Windows\system32\MSCTF.dll
+0x000007fefd250000 - 0x000007fefd255000 	C:\Windows\system32\api-ms-win-downlevel-advapi32-l1-1-0.dll
+0x000007fefceb0000 - 0x000007fefced5000 	C:\Windows\system32\SspiCli.dll
+0x0000000064cb0000 - 0x0000000064d82000 	C:\Program Files\Android\Android Studio\jre\jre\bin\msvcr100.dll
+0x0000000054230000 - 0x0000000054a6f000 	C:\Program Files\Android\Android Studio\jre\jre\bin\server\jvm.dll
+0x000007fef5fa0000 - 0x000007fef5fa9000 	C:\Windows\system32\WSOCK32.dll
+0x000007feff4a0000 - 0x000007feff4ed000 	C:\Windows\system32\WS2_32.dll
+0x000007fefd460000 - 0x000007fefd468000 	C:\Windows\system32\NSI.dll
+0x000007fefa6b0000 - 0x000007fefa6eb000 	C:\Windows\system32\WINMM.dll
+0x000007fefc970000 - 0x000007fefc97c000 	C:\Windows\system32\VERSION.dll
+0x0000000077580000 - 0x0000000077587000 	C:\Windows\system32\PSAPI.DLL
+0x000007fefa050000 - 0x000007fefa05f000 	C:\Program Files\Android\Android Studio\jre\jre\bin\verify.dll
+0x000007fef5410000 - 0x000007fef5439000 	C:\Program Files\Android\Android Studio\jre\jre\bin\java.dll
+0x000007fef8a30000 - 0x000007fef8a46000 	C:\Program Files\Android\Android Studio\jre\jre\bin\zip.dll
+
+VM Arguments:
+jvm_args: -Djava.awt.headless=true -Xmx64M -Dfile.encoding=windows-1252 -Duser.country=ES -Duser.language=es -Duser.variant 
+java_command: com.google.devtools.build.android.desugar.Desugar --input D:\Escritorio\Ivan Zhen\PFC-FUTH\pfcjun18-Jozet-Ivan\app\build\intermediates\transforms\stackFramesFixer\debug\45.jar --output D:\Escritorio\Ivan Zhen\PFC-FUTH\pfcjun18-Jozet-Ivan\app\build\intermediates\transforms\desugar\debug\46.jar --input D:\Escritorio\Ivan Zhen\PFC-FUTH\pfcjun18-Jozet-Ivan\app\build\intermediates\classes\debug --output D:\Escritorio\Ivan Zhen\PFC-FUTH\pfcjun18-Jozet-Ivan\app\build\intermediates\transforms\desugar\debug\0 --input D:\Escritorio\Ivan Zhen\PFC-FUTH\pfcjun18-Jozet-Ivan\app\build\intermediates\transforms\stackFramesFixer\debug\16.jar --output D:\Escritorio\Ivan Zhen\PFC-FUTH\pfcjun18-Jozet-Ivan\app\build\intermediates\transforms\desugar\debug\17.jar --input D:\Escritorio\Ivan Zhen\PFC-FUTH\pfcjun18-Jozet-Ivan\app\build\intermediates\transforms\stackFramesFixer\debug\7.jar --output D:\Escritorio\Ivan Zhen\PFC-FUTH\pfcjun18-Jozet-Ivan\app\build\intermediates\transforms\desugar\debug\8.jar --input D:\Escritorio\Ivan Zhen\PFC-FUTH\pfcjun18-Jozet-Ivan\app\build\intermediates\transforms\stackFramesFixer\debug\19.jar --output D:\Escritorio\Ivan Zhen\PFC-FUTH\pfcjun18-Jozet-Ivan\app\build\intermediates\transforms\desugar\debug\20.jar --input D:\Escritorio\Ivan Zhen\PFC-FUTH\pfcjun18-Jozet-Ivan\app\build\intermediates\transforms\stackFramesFixer\debug\35.jar --output D:\Escritorio\Ivan Zhen\PFC-FUTH\pfcjun18-Jozet-Ivan\app\build\intermediates\transforms\desugar\debug\36.jar --classpath_entry D:\Escritorio\Ivan Zhen\PFC-FUTH\pfcjun18-Jozet-Ivan\app\build\intermediates\classes\debug --classpath_entry D:\Escritorio\Ivan Zhen\PFC-FUTH\pfcjun18-Jozet-Ivan\app\build\intermediates\transforms\stackFramesFixer\debug\0.jar --classpath_entry D:\Escritorio\Ivan Zhen\PFC-FUTH\pfcjun18-Jozet-Ivan\app\build\intermediates\transforms\stackFramesFixer\debug\1.jar --classpath_entry D:\Escritorio\Ivan Zhen\PFC-FUTH\pfcjun18-Jozet-Ivan\app\build\intermediates\transforms\stackFramesFixer\de
+java_class_path (initial): C:\Users\Ivan Zhen\AppData\Local\Temp\desugar_deploy.jar6858286628160946299
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=C:\Program Files\Java\jdk1.8.0_121
+CLASSPATH=.;C:\Program Files (x86)\Java\jre1.8.0_77\lib\ext\QTJava.zip
+PATH=D:\Program Files (x86)\Python27\;D:\Program Files (x86)\Python27\Scripts;D:\oraclexe\app\oracle\product\11.2.0\server\bin;;C:\ProgramData\Oracle\Java\javapath;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.5\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.5\libnvvp;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;D:\WinAVR-20100110\bin;D:\WinAVR-20100110\utils\bin; C:\Windows\system32;C:\Windows;C:\Windows\ System32\Wbem;C:\Windows\System32\WindowsPowerSh ell\v1.0\;c:\windows;c:\windows\system32;c:\windows\system32\wbem ;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\windows\system32\wbem;D:\Program Files (x86)\Bitvise SSH Client;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;D:\Program Files (x86)\GNU\GnuPG\pub;C:\Program Files (x86)\GtkSharp\2.12\bin;D:\Program Files (x86)\QuickTime\QTSystem\;C:\Users\Ivan Zhen\.dnx\bin;C:\Program Files\Microsoft DNX\Dnvm\;C:\Program Files\Microsoft SQL Server\110\Tools\Binn\;C:\Program Files\Microsoft SQL Server\120\Tools\Binn\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files\Java\jdk1.8.0_25\bin;C:\WINDOWS\system32\WindowsPowerShell\v1.0;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;D:\Program Files\mingw-w64\x86_64-6.2.0-posix-seh-rt_v5-rev1\mingw64\bin;C:\Program Files\Git\cmd;D:\Escritorio\Ivan Zhen\Programas\Datos\apache-maven-3.3.9;C:\Program Files (x86)\Skype\Phone\;D:\Program Files\LLVM\bin;C:\MinGW\bin;D:\Program Files (x86)\Inno Setup 5;C:\Program Files (x86)\WiX Toolset v3.11\bin;C:\Program Files\MySQL\MySQL Utilities 1.6\;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Geth\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Users\Ivan Zhen\AppData\Local\atom\bin
+USERNAME=Ivan Zhen
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 63 Stepping 2, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 7 , 64 bit Build 7601 (6.1.7601.24117)
+
+CPU:total 12 (initial active 12) (6 cores per cpu, 2 threads per core) family 6 model 63 stepping 2, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, erms, lzcnt, ht, tsc, tscinvbit, bmi1, bmi2
+
+Memory: 4k page, physical 16698672k(870604k free), swap 17745372k(3436k free)
+
+vm_info: OpenJDK 64-Bit Server VM (25.152-b02) for windows-amd64 JRE (1.8.0_152-release-1024-b02), built by "builder" with MS VC++ 10.0 (VS2010)
+
+time: Sun Jun 10 22:23:14 2018
+elapsed time: 0 seconds (0d 0h 0m 0s)
+
