@@ -79,7 +79,48 @@ public class NotificationService extends IntentService {
 
         /// TODO: Add the code to create the UnreadConversation.
         // Build a RemoteInput for receiving voice input from devices.
-        RemoteInput remoteInput = new RemoteInput.Builder(Constantes.VOICE_REPLY).build();
+        String[] lightReplies = new String[]{"Encender", "Apagar"};
+        String[] plugReplies = new String[]{"Activar", "Desactivar"};
+        String[] temperatureReplies = new String[]{"¿Qué temperatura hace?"};
+        String[] humidityReplies = new String[]{"¿Qué humedad hace?"};
+        String[] gasReplies = new String[]{"¿Qué nivel de riesgo hay?"};
+
+        RemoteInput remoteInput;
+        if (channel.equals(Constantes.CHANNEL_LIGHT)) {
+            remoteInput = new RemoteInput.Builder(Constantes.VOICE_REPLY)
+                    .setChoices(lightReplies)
+                    .setLabel(Constantes.REPLY_LABEL)
+                    .build();
+        }
+        else if (channel.equals(Constantes.CHANNEL_PLUG)) {
+            remoteInput = new RemoteInput.Builder(Constantes.VOICE_REPLY)
+                    .setLabel(Constantes.REPLY_LABEL)
+                    .setChoices(plugReplies)
+                    .build();
+        }
+        else if (channel.equals(Constantes.CHANNEL_TEMPERATURE)) {
+            remoteInput = new RemoteInput.Builder(Constantes.VOICE_REPLY)
+                    .setLabel(Constantes.REPLY_LABEL)
+                    .setChoices(temperatureReplies)
+                    .build();
+        }
+        else if (channel.equals(Constantes.CHANNEL_HUMIDITY)) {
+            remoteInput = new RemoteInput.Builder(Constantes.VOICE_REPLY)
+                    .setLabel(Constantes.REPLY_LABEL)
+                    .setChoices(humidityReplies)
+                    .build();
+        }
+        else if (channel.equals(Constantes.CHANNEL_GAS)) {
+            remoteInput = new RemoteInput.Builder(Constantes.VOICE_REPLY)
+                    .setLabel(Constantes.REPLY_LABEL)
+                    .setChoices(gasReplies)
+                    .build();
+        }
+        else {
+            remoteInput = new RemoteInput.Builder(Constantes.VOICE_REPLY)
+                    .setLabel(Constantes.REPLY_LABEL)
+                    .build();
+        }
 
         // Create the UnreadConversation and populate it with the participant name,
         // read and reply intents.
@@ -101,11 +142,15 @@ public class NotificationService extends IntentService {
 
         // 2. Build action
         NotificationCompat.Action replyAction = new NotificationCompat.Action.Builder(
-                android.R.drawable.sym_action_chat, "Reply", getReplyPendingIntent(channel, channelId))
+                R.drawable.ic_reply_icon_vector, Constantes.REPLY_LABEL, getReplyPendingIntent(channel, channelId))
                 .addRemoteInput(remoteInput)
                 .extend(inlineActionForWear2) // TODO: Add better Wear support.
-                .setAllowGeneratedReplies(true)
+                .setAllowGeneratedReplies(false)
                 .build();
+
+        // Wearable extender
+        NotificationCompat.WearableExtender wearableExtender = new NotificationCompat.WearableExtender()
+                .addAction(replyAction);
 
         // Creamos la notificacion
         NotificationCompat.Builder builder =
@@ -119,10 +164,8 @@ public class NotificationService extends IntentService {
                         .setContentTitle(sender)
                         .setContentText(message)
                         .setContentIntent(readPendingIntent)
-                        //.extend(new NotificationCompat.WearableExtender().addAction(replyAction))  // TODO: Android Wear compatibility
-                        /// TODO: Extend the notification with CarExtender.
-                        .extend(new NotificationCompat.CarExtender()
-                                .setUnreadConversation(unreadConversationBuilder.build()));
+                        .extend(wearableExtender)  // TODO: Android Wear compatibility
+                        .extend(new NotificationCompat.CarExtender().setUnreadConversation(unreadConversationBuilder.build()));  // TODO: Extend the notification with CarExtender.
         builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 
         if (hasReply) {  // Si se ha indicado que la notificacion debe tener respuesta se le añade

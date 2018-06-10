@@ -34,7 +34,7 @@ public class MessageReplyReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Constantes.REPLY_ACTION.equals(intent.getAction())) {
-            CharSequence message = getMessageText(intent);
+            CharSequence message = getMessageText(intent).toString().trim();
             String channel = intent.getStringExtra("channel"); // Se obtiene el canal de la notificacion en forma de string
             int channelId = intent.getIntExtra("channelId", 0);  // Se obtiene el canal de la notificacion en forma de int
 

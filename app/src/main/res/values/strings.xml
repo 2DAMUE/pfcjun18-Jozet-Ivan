@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Futh</string>
     <string name="not_firebase_auth">Error de autenticación con Firebase</string>
-    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_main">Main2Activity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
