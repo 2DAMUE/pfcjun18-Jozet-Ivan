@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'key0'
+            keyPassword 'keystore'
+            storeFile file('D:/Escritorio/Ivan Zhen/Programas/Datos/KeystoreFolder/Futh.jks')
+            storePassword 'keystore'
+        }
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.quadram.futh"
@@ -15,6 +23,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
         }
     }
     buildToolsVersion '27.0.3'
